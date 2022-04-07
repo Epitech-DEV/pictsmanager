@@ -66,7 +66,7 @@ final buttonThemeData = ElevatedButtonThemeData(
     backgroundColor: MaterialStateProperty.resolveWith<Color?>(
       (Set<MaterialState> states) {
         if (states.contains(MaterialState.pressed)) {
-          return _primaryColor.withOpacity(0.5);
+          return _accentPrimaryColor;
         }
         return _primaryColor; // Use the component's default.
       },
