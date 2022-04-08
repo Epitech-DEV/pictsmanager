@@ -1,5 +1,19 @@
-import 'package:backend/backend.dart' as backend;
+import 'package:backend/backend.dart';
+import 'dart:mirrors';
+
+import 'package:backend/core/backend_request.dart';
 
 void main(List<String> arguments) {
-  print('Hello world: ${backend.calculate()}!');
+  Backend backend = Backend();
+
+  backend.addRoute(
+    verb: 'GET',
+    path: '/add/:valA/:valB',
+    handler: (BackendRequest request) {
+      return request.get<double>(ParamsType.params, 'valA')! +
+          request.get<int>(ParamsType.params, 'valB')!;
+    },
+  );
+
+  backend.start();
 }
