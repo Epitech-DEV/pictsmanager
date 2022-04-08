@@ -1,0 +1,130 @@
+import 'package:backend/backend.dart';
+import 'package:backend/backend_module.dart';
+import 'package:backend/errors/backend_error.dart';
+import 'package:backend/core/backend_request.dart';
+import 'package:backend/errors/error_manager.dart';
+import 'package:backend/network/router_part.dart';
+
+class Routes {
+  final List<RouterPart> _staticParts = [];
+  final List<RouterPart> _templatedParts = [];
+}
+
+typedef RouteHandler = dynamic Function(BackendRequest);
+
+class Router extends BackendModule {
+  final Map<String, Routes> _routes = {};
+
+  Router(Backend backend) : super(backend);
+
+  @override
+  void init() {}
+
+  void add({
+    required String verb,
+    required String path,
+    required RouteHandler handler,
+  }) {
+    RouterPart part = RouterPart.parse(path, handler);
+
+    Routes? routes = _routes[verb.toLowerCase()];
+    if (routes == null) {
+      _routes[verb.toLowerCase()] = (routes = Routes());
+    }
+
+    if (part.type == PathType.static) {
+      int index = routes._staticParts.indexWhere(
+        (element) => element.path == part.path,
+      );
+
+      if (index > -1) {
+        throw Exception(
+          'Duplicate static route: ${verb.toUpperCase()} $path',
+        );
+      }
+
+      routes._staticParts.add(part);
+    } else {
+      int index = routes._templatedParts.indexWhere(
+        (element) => element.path == part.path,
+      );
+
+      if (index > -1) {
+        throw Exception(
+          'Duplicate templated route: ${verb.toUpperCase()} $path',
+        );
+      }
+
+      routes._templatedParts.add(part);
+    }
+  }
+
+  RouterPart? match(String verb, String path) {
+    Routes? routes = _routes[verb.toLowerCase()];
+    if (routes == null) {
+      return null;
+    }
+
+    for (RouterPart part in routes._staticParts) {
+      if (part.match(path)) {
+        return part;
+      }
+    }
+
+    for (RouterPart part in routes._templatedParts) {
+      if (part.match(path)) {
+        return part;
+      }
+    }
+
+    return null;
+  }
+
+  Future<void> execute(PrivateBackendRequest request) async {
+    RouterPart? part = match(request.method, request.originalRequest.uri.path);
+
+    if (part == null) {
+      request.response.error = backend.getError('api:not_found', args: [
+        request.method.toUpperCase(),
+        request.originalRequest.uri.path
+      ]);
+      return;
+    }
+
+    Map<String, String>? params = part.getParams(
+      request.originalRequest.uri.path,
+    );
+
+    if (params != null) {
+      request.setParams(params);
+    }
+
+    try {
+      dynamic result = await part.handler!(request);
+      request.response.result = result;
+    } catch (error) {
+      if (error is BackendError) {
+        request.response.error = error;
+      } else if (error is Error) {
+        request.response.error = BackendError(
+          statusCode: 502,
+          message: error.toString(),
+          stackTrace: error.stackTrace,
+          type: 'InternalError',
+        );
+      } else if (error is Exception) {
+        request.response.error = BackendError(
+          statusCode: 502,
+          message: error.toString(),
+          type: 'InternalError',
+        );
+      } else if (error is String) {
+        request.response.error = BackendError(
+          statusCode: 502,
+          message: error.toString(),
+          type: 'InternalError',
+        );
+      }
+    }
+  }
+}
