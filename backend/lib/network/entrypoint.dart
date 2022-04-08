@@ -38,12 +38,12 @@ class Entrypoint extends BackendModule {
     addDefaultHeaders(request, request.response);
 
     if (request.response.errored) {
-      response.write(jsonEncode(request.response.error!.toJson()));
+      response.write(jsonEncode({'error': request.response.error!.toJson()}));
       response.close();
       return;
     }
 
-    String json = jsonEncode(request.response.result);
+    String json = jsonEncode({'result': request.response.result});
     response.write(json);
     response.close();
   }
