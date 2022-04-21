@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/presentations/pages/home.dart';
+import 'package:frontend/views/home.dart';
 
-import 'presentations/themes/default.dart';
+import 'themes/default.dart';
 
 class PictsManagerApp extends StatelessWidget {
   const PictsManagerApp({Key? key}) : super(key: key);
@@ -14,7 +14,7 @@ class PictsManagerApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         elevatedButtonTheme: buttonThemeData
       ),
-      home: const Home(),
+      home: const HomeView(),
     );
   }
 }

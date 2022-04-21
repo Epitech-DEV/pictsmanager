@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'package:flutter/material.dart';
 
 const _backgroundColor = Colors.white;
@@ -35,6 +37,20 @@ const h2Style = TextStyle(
   color: _secondaryColor,
 );
 
+// TILE TEXT STYLES
+
+const tileTitleTextStyle = TextStyle(
+  fontSize: 13,
+  fontWeight: FontWeight.w600,
+  color: _quaternaryColor,
+);
+
+const tileDetailsTextStyle = TextStyle(
+  fontSize: 11,
+  fontWeight: FontWeight.w600,
+  color: _secondaryColor,
+);
+
 // INPUT TEXT STYLES
 
 const inputLabelStyle = TextStyle(
@@ -60,6 +76,8 @@ const inputErrorTextStyle = TextStyle(
   fontWeight: FontWeight.w600,
   color: _errorColor,
 );
+
+// BUTTON STYLES
 
 final buttonThemeData = ElevatedButtonThemeData(
   style: ButtonStyle(
