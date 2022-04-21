@@ -1,11 +1,21 @@
+import 'package:backend/annotations/backend_annotations.dart';
+
+import 'utils/reflect.dart';
+
+import 'package:backend/core/controller/backend_controller.dart';
 import 'package:backend/errors/backend_error.dart';
 import 'package:backend/errors/error_manager.dart';
+import 'package:backend/event/event_emitter.dart';
 import 'package:backend/network/entrypoint.dart';
 import 'package:backend/network/router.dart';
-
 import 'backend_error_codes.dart';
 
-class Backend with ErrorManagerMixin {
+export 'package:backend/annotations/backend_annotations.dart';
+export 'package:backend/core/controller/backend_controller.dart';
+export 'package:backend/core/backend_request.dart';
+export 'package:backend/event/event.dart';
+
+class Backend extends EventEmitter with ErrorManagerMixin {
   late final Router _router;
   late final Entrypoint _entrypoint;
   final ErrorManager errorManager = ErrorManager();
@@ -15,14 +25,6 @@ class Backend with ErrorManagerMixin {
     _entrypoint = Entrypoint(this, _router);
 
     loadErrorCodes(errorManager);
-  }
-
-  void addRoute({
-    required String verb,
-    required String path,
-    required RouteHandler handler,
-  }) {
-    _router.add(verb: verb, path: path, handler: handler);
   }
 
   void start({int port = 8080}) async {
@@ -50,5 +52,65 @@ class Backend with ErrorManagerMixin {
   @override
   void throwError(String errorCode, {List<String?>? args}) {
     errorManager.throwError(errorCode, args: args);
+  }
+
+  void registerController(BackendController controller) {
+    controller.init(backend: this);
+
+    InstanceMirror mirror = reflect(controller);
+    Map<Symbol, MethodMirror> members = mirror.type.instanceMembers;
+
+    ControllerInfo? controllerInfo = Reflect.getControllerAnnotation(mirror);
+
+    String controllerName = MirrorSystem.getName(mirror.type.simpleName);
+
+    if (controllerName.endsWith('Controller')) {
+      controllerName = controllerName.substring(
+        0,
+        controllerName.length - 'Controller'.length,
+      );
+    }
+
+    for (MapEntry<Symbol, MethodMirror> entry in members.entries) {
+      List<RouteAnnotation> annotations =
+          Reflect.listRouteAnnotations(entry.value);
+
+      if (annotations.isEmpty) {
+        continue;
+      }
+
+      if (!Reflect.isValidRouteMethod(entry.value)) {
+        throw Exception(
+          'Route method "${entry.key}" of ${controller.runtimeType.toString()} instance should match Function(BackendRequest)',
+        );
+      }
+
+      for (RouteAnnotation annotation in annotations) {
+        List<String> path = [];
+
+        path.add(controllerInfo?.path ?? controllerName.toLowerCase());
+        path.add(annotation.path ?? '');
+
+        final String buildedPath = path
+            .map((e) {
+              if (e.startsWith('/')) {
+                return e.substring(1);
+              }
+              return e;
+            })
+            .where((element) => element.isNotEmpty)
+            .join('/');
+
+        print("Add route ${annotation.verb} /$buildedPath");
+
+        _router.add(
+          verb: annotation.verb,
+          path: "/$buildedPath",
+          handler: mirror.getField(entry.key).reflectee as RouteHandler,
+          controller: controllerName.toLowerCase(),
+          action: MirrorSystem.getName(entry.value.simpleName).toLowerCase(),
+        );
+      }
+    }
   }
 }
