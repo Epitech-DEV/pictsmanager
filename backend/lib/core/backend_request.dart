@@ -18,10 +18,20 @@ class PrivateBackendRequest extends BackendRequest {
   void setParams(Map<String, String> params) {
     _params = params;
   }
+
+  void setAction(String action) {
+    _action = action;
+  }
+
+  void setController(String controller) {
+    _controller = controller;
+  }
 }
 
 class BackendRequest {
   String? _body;
+  String? _action;
+  String? _controller;
   Map<String, dynamic>? _bodyParams;
   Map<String, String>? _params;
   final HttpRequest _request;
@@ -31,6 +41,8 @@ class BackendRequest {
     _response = BackendResponse(_request.response);
   }
 
+  String get action => _action!;
+  String get controller => _controller!;
   BackendResponse get response => _response;
   HttpRequest get originalRequest => _request;
   String? get bodyString => _body;
