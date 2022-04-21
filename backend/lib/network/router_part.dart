@@ -38,6 +38,8 @@ class RouterPart {
   String path;
   List<RouterTemplate> templates;
   Function? handler;
+  String controller = "";
+  String action = "";
 
   RouterPart._({
     required this.type,

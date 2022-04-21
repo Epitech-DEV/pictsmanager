@@ -2,7 +2,7 @@ import 'package:backend/backend.dart';
 import 'package:backend/backend_module.dart';
 import 'package:backend/errors/backend_error.dart';
 import 'package:backend/core/backend_request.dart';
-import 'package:backend/errors/error_manager.dart';
+import 'package:backend/event/request_events.dart';
 import 'package:backend/network/router_part.dart';
 
 class Routes {
@@ -24,8 +24,12 @@ class Router extends BackendModule {
     required String verb,
     required String path,
     required RouteHandler handler,
+    required String controller,
+    required String action,
   }) {
     RouterPart part = RouterPart.parse(path, handler);
+    part.action = action;
+    part.controller = controller;
 
     Routes? routes = _routes[verb.toLowerCase()];
     if (routes == null) {
@@ -91,6 +95,9 @@ class Router extends BackendModule {
       return;
     }
 
+    request.setController(part.controller);
+    request.setAction(part.action);
+
     Map<String, String>? params = part.getParams(
       request.originalRequest.uri.path,
     );
@@ -100,8 +107,13 @@ class Router extends BackendModule {
     }
 
     try {
-      dynamic result = await part.handler!(request);
+      BeforeRequestProcessingEvent beforeProcessing =
+          await backend.pipe(BeforeRequestProcessingEvent(request));
+
+      dynamic result = await part.handler!(beforeProcessing.request);
       request.response.result = result;
+
+      await backend.pipe(AfterRequestProcessingEvent(request));
     } catch (error) {
       if (error is BackendError) {
         request.response.error = error;
