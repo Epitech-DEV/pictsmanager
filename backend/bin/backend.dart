@@ -14,7 +14,7 @@ void main(List<String> arguments) {
     constructor: ApiError.new,
   );
 
-  backend.registerController(DocumentController());
+  backend.registerController(MathController());
 
   backend.start();
 }
