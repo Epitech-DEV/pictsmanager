@@ -1,19 +1,20 @@
-import 'package:backend/backend.dart';
-import 'dart:mirrors';
+import 'dart:math';
 
-import 'package:backend/core/backend_request.dart';
+import 'package:backend/backend.dart';
+import 'package:backend/errors/api_error.dart';
+
+import 'test_controller.dart';
 
 void main(List<String> arguments) {
   Backend backend = Backend();
 
-  backend.addRoute(
-    verb: 'GET',
-    path: '/add/:valA/:valB',
-    handler: (BackendRequest request) {
-      return request.get<double>(ParamsType.params, 'valA')! +
-          request.get<int>(ParamsType.params, 'valB')!;
-    },
+  backend.addError(
+    errorCode: "math:add_fail",
+    message: "Addition failed %s + %s",
+    constructor: ApiError.new,
   );
+
+  backend.registerController(DocumentController());
 
   backend.start();
 }
