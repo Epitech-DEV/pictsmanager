@@ -13,6 +13,7 @@ class Entrypoint extends BackendModule {
 
   Entrypoint(Backend backend, this.router) : super(backend);
 
+  @override
   void init() {}
 
   Future<void> listen({int port = 8080}) async {
@@ -49,7 +50,6 @@ class Entrypoint extends BackendModule {
   }
 
   void _onHTTPRequest(HttpRequest request) {
-    print('${request.method} ${request.uri}');
     PrivateBackendRequest _request = PrivateBackendRequest(request);
 
     Future(() async {
