@@ -14,6 +14,7 @@ export 'package:backend/annotations/backend_annotations.dart';
 export 'package:backend/core/controller/backend_controller.dart';
 export 'package:backend/core/backend_request.dart';
 export 'package:backend/event/event.dart';
+export 'package:backend/errors/errors.dart';
 
 class Backend extends EventEmitter with ErrorManagerMixin {
   late final Router _router;
