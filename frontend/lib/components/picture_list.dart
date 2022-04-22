@@ -11,7 +11,7 @@ class PictureList extends StatefulWidget {
     Key? key 
   }) : super(key: key);
 
-  final GroupType groupType;
+  final PictureGroupType groupType;
   final List<PicturesGroupData> data;
 
   @override

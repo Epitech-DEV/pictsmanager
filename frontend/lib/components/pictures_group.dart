@@ -24,9 +24,9 @@ class PicturesGroup extends StatefulWidget {
 class _PicturesGroupState extends State<PicturesGroup> {
   @override
   Widget build(BuildContext context) {
-    final bool displayDay = widget.data.type == GroupType.day;
-    final bool displayMonth = widget.data.type == GroupType.month || (displayDay && widget.changeMonth);
-    final bool displayYear = widget.data.type == GroupType.year || (displayMonth && widget.changeYear);
+    final bool displayDay = widget.data.type == PictureGroupType.day;
+    final bool displayMonth = widget.data.type == PictureGroupType.month || (displayDay && widget.changeMonth);
+    final bool displayYear = widget.data.type == PictureGroupType.year || (displayMonth && widget.changeYear);
 
     return Column(
       children: [

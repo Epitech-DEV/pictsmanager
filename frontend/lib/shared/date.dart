@@ -26,12 +26,30 @@ class Date {
   ];
 
   /// Return the name of the month for the given month number (1-12).
-  static getMonthName(int month) {
+  static String getMonthName(int month) {
     return _kMonthNames[month - 1];
   }
 
   /// Return the name of the day for the given weekday number (1-7).
-  static getDayName(int day) {
+  static String getDayName(int day) {
     return _kDayNames[day - 1];
+  }
+
+  /// Return true if the given [DateTime] have the same day, month and year.
+  static bool isTheSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
+  }
+
+  /// Return true if the given [DateTime] have the same month and year.
+  static bool isTheSameMonth(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month;
+  }
+
+  /// Return true if the given [DateTime] have the same year.
+  static bool isTheSameYear(DateTime date1, DateTime date2) {
+    return date1.year == date2.year;
   }
 }
