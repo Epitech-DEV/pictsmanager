@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:frontend/models/pictures_group.dart';
-import 'package:frontend/presentations/components/picture.dart';
-import 'package:frontend/presentations/shared/date.dart';
-import 'package:frontend/presentations/shared/globals.dart';
+import 'package:frontend/components/picture.dart';
+import 'package:frontend/shared/date.dart';
+import 'package:frontend/shared/globals.dart';
 
 class PicturesGroup extends StatefulWidget {
   const PicturesGroup({ 

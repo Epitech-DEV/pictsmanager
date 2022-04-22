@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:frontend/models/pictures_group.dart';
-import 'package:frontend/presentations/components/pictures_group.dart';
+import 'package:frontend/components/pictures_group.dart';
 
 class PictureList extends StatefulWidget {
   

@@ -1,6 +1,6 @@
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontend/presentations/shared/date.dart';
+import 'package:frontend/shared/date.dart';
 
 
 void main() {
