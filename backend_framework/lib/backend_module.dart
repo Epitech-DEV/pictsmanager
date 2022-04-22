@@ -1,5 +1,5 @@
 import 'package:meta/meta.dart';
-import 'package:backend/backend.dart';
+import 'package:backend_framework/backend.dart';
 
 abstract class BackendModule {
   @protected

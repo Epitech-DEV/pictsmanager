@@ -1,4 +1,4 @@
-import 'package:backend/errors/error_manager.dart';
+import 'package:backend_framework/errors/error_manager.dart';
 
 import 'errors/api_error.dart';
 

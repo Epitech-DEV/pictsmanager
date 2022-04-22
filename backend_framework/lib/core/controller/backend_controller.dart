@@ -1,4 +1,4 @@
-import 'package:backend/backend.dart';
+import 'package:backend_framework/backend.dart';
 
 class BackendController {
   late Backend backend;

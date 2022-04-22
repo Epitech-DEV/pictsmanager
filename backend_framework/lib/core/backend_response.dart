@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:backend/errors/backend_error.dart';
+import 'package:backend_framework/errors/backend_error.dart';
 
 class BackendResponse {
   late final HttpResponse _response;

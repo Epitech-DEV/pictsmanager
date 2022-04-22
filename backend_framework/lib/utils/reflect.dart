@@ -1,7 +1,7 @@
 export 'dart:mirrors';
 import 'dart:mirrors';
-import 'package:backend/annotations/backend_annotations.dart';
-import 'package:backend/core/backend_request.dart';
+import 'package:backend_framework/annotations/backend_annotations.dart';
+import 'package:backend_framework/core/backend_request.dart';
 
 final TypeMirror routeAnnotationType = reflectType(RouteAnnotation);
 final TypeMirror controllerAnnotationType = reflectType(ControllerInfo);

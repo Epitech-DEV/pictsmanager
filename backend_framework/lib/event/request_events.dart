@@ -1,5 +1,5 @@
-import 'package:backend/core/backend_request.dart';
-import 'package:backend/event/event_emitter.dart';
+import 'package:backend_framework/core/backend_request.dart';
+import 'package:backend_framework/event/event_emitter.dart';
 
 /// Before the request is processed, this event is emitted.
 class BeforeRequestProcessingEvent with IEvent {

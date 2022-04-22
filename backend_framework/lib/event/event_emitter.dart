@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:backend/extensions/list.dart';
+import 'package:backend_framework/extensions/list.dart';
 
 typedef EventListener<T> = FutureOr<void> Function(T event);
 typedef PipeListener<T> = FutureOr<T> Function(T event);

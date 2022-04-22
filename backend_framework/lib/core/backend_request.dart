@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:backend/core/backend_response.dart';
+import 'package:backend_framework/core/backend_response.dart';
 
 enum ParamsType { query, body, params }
 

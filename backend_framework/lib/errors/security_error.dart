@@ -1,4 +1,4 @@
-import 'package:backend/errors/backend_error.dart';
+import 'package:backend_framework/errors/backend_error.dart';
 
 class SecurityError extends BackendError {
   SecurityError(

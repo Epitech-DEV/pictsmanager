@@ -1,20 +1,20 @@
-import 'package:backend/annotations/backend_annotations.dart';
+import 'package:backend_framework/annotations/backend_annotations.dart';
 
 import 'utils/reflect.dart';
 
-import 'package:backend/core/controller/backend_controller.dart';
-import 'package:backend/errors/backend_error.dart';
-import 'package:backend/errors/error_manager.dart';
-import 'package:backend/event/event_emitter.dart';
-import 'package:backend/network/entrypoint.dart';
-import 'package:backend/network/router.dart';
+import 'package:backend_framework/core/controller/backend_controller.dart';
+import 'package:backend_framework/errors/backend_error.dart';
+import 'package:backend_framework/errors/error_manager.dart';
+import 'package:backend_framework/event/event_emitter.dart';
+import 'package:backend_framework/network/entrypoint.dart';
+import 'package:backend_framework/network/router.dart';
 import 'backend_error_codes.dart';
 
-export 'package:backend/annotations/backend_annotations.dart';
-export 'package:backend/core/controller/backend_controller.dart';
-export 'package:backend/core/backend_request.dart';
-export 'package:backend/event/event.dart';
-export 'package:backend/errors/errors.dart';
+export 'package:backend_framework/annotations/backend_annotations.dart';
+export 'package:backend_framework/core/controller/backend_controller.dart';
+export 'package:backend_framework/core/backend_request.dart';
+export 'package:backend_framework/event/event.dart';
+export 'package:backend_framework/errors/errors.dart';
 
 class Backend extends EventEmitter with ErrorManagerMixin {
   late final Router _router;

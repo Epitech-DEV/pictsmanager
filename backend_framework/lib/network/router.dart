@@ -1,9 +1,6 @@
-import 'package:backend/backend.dart';
-import 'package:backend/backend_module.dart';
-import 'package:backend/errors/backend_error.dart';
-import 'package:backend/core/backend_request.dart';
-import 'package:backend/event/request_events.dart';
-import 'package:backend/network/router_part.dart';
+import 'package:backend_framework/backend.dart';
+import 'package:backend_framework/backend_module.dart';
+import 'package:backend_framework/network/router_part.dart';
 
 class Routes {
   final List<RouterPart> _staticParts = [];
