@@ -40,7 +40,7 @@ class _PicturesGroupState extends State<PicturesGroup> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: displayDay ? 4 : displayMonth ? 5 : 6,
+                crossAxisCount: displayDay ? 4 : (displayMonth ? 5 : 6),
                 crossAxisSpacing: kSpace,
                 mainAxisSpacing: kSpace,
               ),

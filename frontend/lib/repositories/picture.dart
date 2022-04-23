@@ -13,7 +13,7 @@ class PictureApiRepository extends PictureRepository {
   }
 }
 
-class PictureInMeromryRepository extends PictureRepository {
+class PictureInMemoryRepository extends PictureRepository {
   List<PictureData> userPictures = [
     PictureData(
       name: 'Picture 1',

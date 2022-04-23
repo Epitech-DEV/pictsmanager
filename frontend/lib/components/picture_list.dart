@@ -26,8 +26,8 @@ class _PictureListState extends State<PictureList> {
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
-              final monthHasChanged = index != 0 ? widget.data[index - 1].date.month != widget.data[index].date.month : false;
-              final yearHasChanged = index != 0 ? widget.data[index - 1].date.year != widget.data[index].date.year : false;
+              final monthHasChanged = index != 0 ? widget.data[index - 1].month != widget.data[index].month : false;
+              final yearHasChanged = index != 0 ? widget.data[index - 1].year != widget.data[index].year : false;
       
               return PicturesGroup(
                 data: widget.data[index],
