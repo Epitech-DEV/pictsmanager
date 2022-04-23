@@ -8,6 +8,30 @@ enum PictureGroupType {
   year,
 }
 
+class PictureGroupTypeUtils {
+  static PictureGroupType previous(PictureGroupType current) {
+    switch (current) {
+      case PictureGroupType.year:
+        return PictureGroupType.month;
+      case PictureGroupType.month:
+        return PictureGroupType.day;
+      default:
+        return current;
+    }
+  }
+
+  static PictureGroupType next(PictureGroupType current) {
+    switch (current) {
+      case PictureGroupType.day:
+        return PictureGroupType.month;
+      case PictureGroupType.month:
+        return PictureGroupType.year;
+      default:
+        return current;
+    }
+  }
+}
+
 class PicturesGroupData extends ChangeNotifier {
   PicturesGroupData({
     required this.type,

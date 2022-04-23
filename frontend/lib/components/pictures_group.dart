@@ -8,14 +8,14 @@ import 'package:frontend/shared/globals.dart';
 class PicturesGroup extends StatefulWidget {
   const PicturesGroup({ 
     required this.data,
-    required this.changeMonth,
-    required this.changeYear,
+    required this.monthHasChanged,
+    required this.yearHasChanged,
     Key? key 
   }) : super(key: key);
 
   final PicturesGroupData data;
-  final bool changeYear;
-  final bool changeMonth;
+  final bool yearHasChanged;
+  final bool monthHasChanged;
 
   @override
   State<PicturesGroup> createState() => _PicturesGroupState();
@@ -25,8 +25,8 @@ class _PicturesGroupState extends State<PicturesGroup> {
   @override
   Widget build(BuildContext context) {
     final bool displayDay = widget.data.type == PictureGroupType.day;
-    final bool displayMonth = widget.data.type == PictureGroupType.month || (displayDay && widget.changeMonth);
-    final bool displayYear = widget.data.type == PictureGroupType.year || (displayMonth && widget.changeYear);
+    final bool displayMonth = widget.data.type == PictureGroupType.month || (displayDay && widget.monthHasChanged);
+    final bool displayYear = widget.data.type == PictureGroupType.year || (displayMonth && widget.yearHasChanged);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kSpace * 2, vertical: kSpace),
