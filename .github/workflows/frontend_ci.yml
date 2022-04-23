@@ -10,6 +10,12 @@ jobs:
   test:
     # This job will run on ubuntu virtual machine
     runs-on: ubuntu-latest
+
+    # Setup working directory where will run all steps
+    defaults:
+      run:
+        working-directory: ./frontend
+
     steps:
     
     # Setup Java environment in order to build the Android app.
@@ -24,14 +30,14 @@ jobs:
         channel: 'stable' # 'dev', 'alpha', default to: 'stable'
         flutter-version: '2.10.x' # you can also specify exact version of flutter
     
-    # Get flutter dependencies.
-    - run: flutter pub get
+    - name: Get Flutter dependencies
+      run: flutter pub get
     
-    # Check for any formatting issues in the code.
-    - run: flutter format --set-exit-if-changed .
+    - name: Check for any formatting issues in the code
+      run: flutter format --set-exit-if-changed .
     
-    # Statically analyze the Dart code for any errors.
-    - run: flutter analyze .
+    - name: Statically analyze the Dart code for any errors
+      run: flutter analyze .
     
-    # Run widget tests for our flutter project.
-    - run: flutter test
+    - name: Run widget tests for our flutter project
+      run: flutter test
