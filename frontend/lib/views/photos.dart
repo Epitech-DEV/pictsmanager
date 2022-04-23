@@ -13,7 +13,7 @@ class PhotosView extends StatefulWidget {
 }
 
 class _PhotosViewState extends State<PhotosView> with AutomaticKeepAliveClientMixin {
-  final PictureService _pictureService = PictureService(pictureRepository: PictureInMeromryRepository());
+  final PictureService _pictureService = PictureService(pictureRepository: PictureInMemoryRepository());
   late Future<List<PictureData>> _getUserPicturesFuture;
   List<PicturesGroupData>? pictureGroups;
 
