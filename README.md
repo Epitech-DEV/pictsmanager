@@ -1,5 +1,5 @@
-![frontend test](https://github.com/Epitech-DEV/pictsmanager/actions/workflows/frontend_test/badge.svg)
-![backend test](https://github.com/Epitech-DEV/pictsmanager/actions/workflows/backend_test/badge.svg)
+![frontend test](https://github.com/Epitech-DEV/pictsmanager/actions/workflows/frontend_test.yml/badge.svg)
+![backend test](https://github.com/Epitech-DEV/pictsmanager/actions/workflows/backend_test.yml/badge.svg)
 
 # Picts Manager
 

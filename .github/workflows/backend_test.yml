@@ -5,10 +5,10 @@ on:
     branches:
       - master
     paths:
-      - ./backend/**
+      - 'backend/**'
   pull_request:
     paths:
-      - ./backend/**
+      - 'backend/**'
 
 jobs:
   test:
