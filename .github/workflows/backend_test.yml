@@ -1,0 +1,37 @@
+name: Backend Test CI
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ./backend/**
+  pull_request:
+    paths:
+      - ./backend/**
+
+jobs:
+  test:
+    # This job will run on ubuntu virtual machine
+    runs-on: ubuntu-latest
+
+    # Setup working directory where will run all steps
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:    
+    # Setup Dart environment in order to run tests
+    - uses: actions/checkout@v1
+    - uses: dart-lang/setup-dart@v1
+      with:
+        sdk: '2.16.x'
+    
+    - name: Install dependencies
+      run: dart pub get
+    
+    - name: Analyze project source
+      run: dart analyze --fatal-infos
+    
+    - name: Run tests
+      run: dart test
