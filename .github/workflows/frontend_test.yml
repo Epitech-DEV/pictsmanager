@@ -1,0 +1,44 @@
+name: Frontend Test CI
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ./frontend/**
+  pull_request:
+    paths:
+      - ./frontend/**
+
+jobs:
+  test:
+    # This job will run on ubuntu virtual machine
+    runs-on: ubuntu-latest
+
+    # Setup working directory where will run all steps
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+    
+    # Setup Java environment in order to run tests
+    - uses: actions/checkout@v1
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '12.x'
+    
+    # Setup the flutter environment.
+    - uses: subosito/flutter-action@v1
+      with:
+        channel: 'stable' # 'dev', 'alpha', default to: 'stable'
+        flutter-version: '2.10.x' # you can also specify exact version of flutter
+    
+    - name: Get Flutter dependencies
+      run: flutter pub get
+    
+    - name: Analyze project source
+      run: flutter analyze --fatal-infos .
+    
+    - name: Run tests
+      run: flutter test
