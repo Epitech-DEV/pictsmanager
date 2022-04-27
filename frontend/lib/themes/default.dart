@@ -77,6 +77,10 @@ const inputErrorTextStyle = TextStyle(
   color: _errorColor,
 );
 
+// TEXT FIELD STYLES
+
+const textFieldThemeData = InputDecorationTheme(border: OutlineInputBorder());
+
 // BUTTON STYLES
 
 final buttonThemeData = ElevatedButtonThemeData(
