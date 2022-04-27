@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:frontend/services/authentification.dart';
 import 'package:frontend/themes/default.dart';
 import 'package:frontend/views/home.dart';
@@ -36,7 +37,10 @@ class _RegisterViewState extends State<RegisterView> {
     Navigator.pop(context);
   }
 
-  Widget addTextFields(field, textFieldController, {obscureText = false}) {
+  Widget addTextFields(field, textFieldController, validator,
+      {obscureText = false,
+      keyboardType = TextInputType.text,
+      List<TextInputFormatter> inputFormatters = const []}) {
     return TextFormField(
       obscureText: obscureText,
       decoration: InputDecoration(labelText: field),
@@ -49,19 +53,39 @@ class _RegisterViewState extends State<RegisterView> {
           }
         })
       },
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return "Field is empty";
-        }
-      },
+      validator: validator,
       controller: textFieldController,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
     );
+  }
+
+  String? usernameValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Field is empty";
+    }
+    return null;
+  }
+
+  String? passwordValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Field is empty";
+    }
+    if (value.length < 8) {
+      return "Password isn't long enough";
+    }
+    return null;
   }
 
   List<Widget> registerForm() {
     List<Widget> registerForm = [
-      addTextFields("Username", usernameController),
-      addTextFields("Password", passwordController, obscureText: true),
+      addTextFields("Username", usernameController, usernameValidator,
+          keyboardType: TextInputType.name,
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp('[a-zA-Z]')),
+          ]),
+      addTextFields("Password", passwordController, passwordValidator,
+          obscureText: true),
     ];
 
     registerForm.addAll([

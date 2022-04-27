@@ -9,12 +9,17 @@ class Authentification {
     final response = await http
         .get(Uri.parse('https://jsonplaceholder.typicode.com/albums/1'));
 
-    // const response = Future<http.Response>;
-    print(response.body);
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
-      throw Exception('Failed to login');
+      switch (response.statusCode) {
+        case 401:
+          throw Exception('Invalid information');
+        case 500:
+          throw Exception('Internal server error');
+        default:
+          throw Exception('Failed to login');
+      }
     }
   }
 
@@ -25,7 +30,14 @@ class Authentification {
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
-      throw Exception('Failed to login');
+      switch (response.statusCode) {
+        case 401:
+          throw Exception('Invalid information');
+        case 500:
+          throw Exception('Internal server error');
+        default:
+          throw Exception('Failed to register');
+      }
     }
   }
 }

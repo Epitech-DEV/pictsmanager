@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:frontend/services/authentification.dart';
 import 'package:frontend/themes/default.dart';
 import 'package:frontend/views/home.dart';
@@ -42,7 +43,10 @@ class _LoginViewState extends State<LoginView> {
         context, MaterialPageRoute(builder: (context) => const RegisterView()));
   }
 
-  Widget addTextFields(field, textFieldController, {obscureText = false}) {
+  Widget addTextFields(field, textFieldController, validator,
+      {obscureText = false,
+      keyboardType = TextInputType.text,
+      List<TextInputFormatter> inputFormatters = const []}) {
     return TextFormField(
       obscureText: obscureText,
       decoration: InputDecoration(labelText: field),
@@ -55,19 +59,36 @@ class _LoginViewState extends State<LoginView> {
           }
         })
       },
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return "Field is empty";
-        }
-      },
+      validator: validator,
       controller: textFieldController,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
     );
+  }
+
+  String? usernameValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Field is empty";
+    }
+    return null;
+  }
+
+  String? passwordValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Field is empty";
+    }
+    return null;
   }
 
   List<Widget> loginForm() {
     List<Widget> loginForm = [
-      addTextFields("Username", usernameController),
-      addTextFields("Password", passwordController, obscureText: true),
+      addTextFields("Username", usernameController, usernameValidator,
+          keyboardType: TextInputType.name,
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp('[a-zA-Z]')),
+          ]),
+      addTextFields("Password", passwordController, passwordValidator,
+          obscureText: true),
     ];
 
     if (loginError) {
@@ -85,16 +106,6 @@ class _LoginViewState extends State<LoginView> {
     ]);
 
     return loginForm;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override

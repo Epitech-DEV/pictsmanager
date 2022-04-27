@@ -1,0 +1,1 @@
+const double kSpace = 12.0;
