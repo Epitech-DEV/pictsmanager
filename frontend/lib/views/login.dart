@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/services/authentification.dart';
-import 'package:frontend/themes/default.dart';
 import 'package:frontend/views/home.dart';
 import 'package:frontend/views/register.dart';
+import 'package:frontend/validators/validators.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -38,74 +38,41 @@ class _LoginViewState extends State<LoginView> {
     }
   }
 
-  void switchToRegisterView() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const RegisterView()));
-  }
-
-  Widget addTextFields(field, textFieldController, validator,
-      {obscureText = false,
-      keyboardType = TextInputType.text,
-      List<TextInputFormatter> inputFormatters = const []}) {
-    return TextFormField(
-      obscureText: obscureText,
-      decoration: InputDecoration(labelText: field),
-      onChanged: (value) => {
-        setState(() {
-          if (field == "Password") {
-            password = value;
-          } else if (field == "Username") {
-            username = value;
-          }
-        })
-      },
-      validator: validator,
-      controller: textFieldController,
-      keyboardType: keyboardType,
-      inputFormatters: inputFormatters,
-    );
-  }
-
-  String? usernameValidator(String? value) {
-    if (value == null || value.isEmpty) {
-      return "Field is empty";
-    }
-    return null;
-  }
-
-  String? passwordValidator(String? value) {
-    if (value == null || value.isEmpty) {
-      return "Field is empty";
-    }
-    return null;
-  }
-
   List<Widget> loginForm() {
-    List<Widget> loginForm = [
-      addTextFields("Username", usernameController, usernameValidator,
-          keyboardType: TextInputType.name,
-          inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp('[a-zA-Z]')),
-          ]),
-      addTextFields("Password", passwordController, passwordValidator,
-          obscureText: true),
-    ];
-
-    if (loginError) {
-      loginForm.add(const Text(
-        "Wrong credentials",
-        style: inputErrorTextStyle,
-      ));
-    }
-
-    loginForm.addAll([
+    return [
+      TextFormField(
+        decoration: const InputDecoration(labelText: "Username"),
+        onChanged: (value) => {
+          setState(() {
+            username = value;
+          })
+        },
+        validator: Validators.usernameValidator,
+        controller: usernameController,
+        keyboardType: TextInputType.name,
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp('[a-zA-Z]')),
+        ],
+      ),
+      TextFormField(
+        obscureText: true,
+        decoration: const InputDecoration(labelText: "Password"),
+        onChanged: (value) => {
+          setState(() {
+            password = value;
+          })
+        },
+        validator: Validators.loginPasswordValidator,
+        controller: passwordController,
+      ),
       ElevatedButton(onPressed: login, child: const Text("Login")),
       ElevatedButton(
-          onPressed: switchToRegisterView,
-          child: const Text("Don't have an account ?")),
-    ]);
-
-    return loginForm;
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const RegisterView()));
+          },
+          child: const Text("Don't have an account yet ?")),
+    ];
   }
 
   @override
