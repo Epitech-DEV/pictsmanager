@@ -1,4 +1,5 @@
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/picture.dart';
 
@@ -17,9 +18,19 @@ class Picture extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
       ),
-      child: Image.network(
-        data.url,
+      child: CachedNetworkImage(
+        imageUrl: data.url,
         fit: BoxFit.cover,
+        placeholder: (context, url) => Center(
+          child: Container(
+            color: Theme.of(context).primaryColor,
+          ),
+        ),
+        errorWidget: (context, url, error) => Center(
+          child: Container(
+            color: Theme.of(context).errorColor,
+          ),
+        ),
       ),
     );
   }
