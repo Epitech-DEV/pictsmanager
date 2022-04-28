@@ -10,7 +10,7 @@ void main() {
   group("Testing [Pictures.getPicture] method", () {
     test("Should return 11 [PictureData]", () async {
       final List<PictureData> pictures = await pictureService.getUserPictures();
-      expect(pictures.length, 11);
+      expect(pictures.length, 40);
     });
   });
 
