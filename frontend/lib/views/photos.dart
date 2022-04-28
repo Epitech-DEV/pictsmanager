@@ -40,6 +40,8 @@ class _PhotosViewState extends State<PhotosView> with AutomaticKeepAliveClientMi
             onScaleUpdate: (ScaleUpdateDetails details) {
               if (details.scale == 1.0 || _isGroupTypeAlreadyChanged) return;
               
+              _isGroupTypeAlreadyChanged = true;
+              
               PictureGroupType newGroupType = _currentGroupType;
 
               if (details.scale < 1.0) {
@@ -53,8 +55,6 @@ class _PhotosViewState extends State<PhotosView> with AutomaticKeepAliveClientMi
                 _currentGroupType = newGroupType;
                 pictureGroups = _pictureService.generatePicturesGroups(newGroupType, snapshot.data!);
               });
-
-              _isGroupTypeAlreadyChanged = true;
             },
             onScaleEnd: (_) {
               _isGroupTypeAlreadyChanged = false;
@@ -62,6 +62,22 @@ class _PhotosViewState extends State<PhotosView> with AutomaticKeepAliveClientMi
             child: PictureList(
               groupType: _currentGroupType, 
               data: pictureGroups ?? []
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Column(
+              children: [
+                const Text('Network Error: fail to fetch pictures'),
+                ElevatedButton(
+                  child: const Text('Retry'),
+                  onPressed: () {
+                    setState(() {
+                      _getUserPicturesFuture = _pictureService.getUserPictures();
+                    });
+                  },
+                ),
+              ],
             ),
           );
         } else {
