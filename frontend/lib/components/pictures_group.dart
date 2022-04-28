@@ -82,10 +82,15 @@ class _PicturesGroupState extends State<PicturesGroup> {
     }
 
     if (displayDay) {
-      widgets.add(Text(
-        "${Date.getDayName(widget.data.date.weekday)} ${widget.data.date.weekday}",
-        style: Theme.of(context).textTheme.headlineSmall,
-      ));
+      widgets.addAll(
+        [
+          Text(
+            "${Date.getDayName(widget.data.date.weekday)} ${widget.data.date.weekday}",
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          const SizedBox(height: kSpace),
+        ]
+      );
     }
 
     return widgets;

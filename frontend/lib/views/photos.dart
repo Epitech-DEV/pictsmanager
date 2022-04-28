@@ -30,62 +30,64 @@ class _PhotosViewState extends State<PhotosView> with AutomaticKeepAliveClientMi
   Widget build(BuildContext context) {
     super.build(context);
 
-    return FutureBuilder<List<PictureData>>(
-      future: _getUserPicturesFuture,
-      builder: (BuildContext context, AsyncSnapshot<List<PictureData>> snapshot) {
-        if (snapshot.hasData) {
-          pictureGroups ??= _pictureService.generatePicturesGroups(PictureGroupType.day, snapshot.data!);
-          
-          return GestureDetector(
-            onScaleUpdate: (ScaleUpdateDetails details) {
-              if (details.scale == 1.0 || _isGroupTypeAlreadyChanged) return;
-              
-              _isGroupTypeAlreadyChanged = true;
-              
-              PictureGroupType newGroupType = _currentGroupType;
-
-              if (details.scale < 1.0) {
-                newGroupType = PictureGroupTypeUtils.next(_currentGroupType);
-              }
-              else {
-                newGroupType = PictureGroupTypeUtils.previous(_currentGroupType);
-              }
-              
-              setState(() {
-                _currentGroupType = newGroupType;
-                pictureGroups = _pictureService.generatePicturesGroups(newGroupType, snapshot.data!);
-              });
-            },
-            onScaleEnd: (_) {
-              _isGroupTypeAlreadyChanged = false;
-            },
-            child: PictureList(
-              groupType: _currentGroupType, 
-              data: pictureGroups ?? []
-            ),
-          );
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Column(
-              children: [
-                const Text('Network Error: fail to fetch pictures'),
-                ElevatedButton(
-                  child: const Text('Retry'),
-                  onPressed: () {
-                    setState(() {
-                      _getUserPicturesFuture = _pictureService.getUserPictures();
-                    });
-                  },
-                ),
-              ],
-            ),
-          );
-        } else {
-          return const Center(
-            child: CircularProgressIndicator()
-          );
-        }
-      }, 
+    return SafeArea(
+      child: FutureBuilder<List<PictureData>>(
+        future: _getUserPicturesFuture,
+        builder: (BuildContext context, AsyncSnapshot<List<PictureData>> snapshot) {
+          if (snapshot.hasData) {
+            pictureGroups ??= _pictureService.generatePicturesGroups(PictureGroupType.day, snapshot.data!);
+            
+            return GestureDetector(
+              onScaleUpdate: (ScaleUpdateDetails details) {
+                if (details.scale == 1.0 || _isGroupTypeAlreadyChanged) return;
+                
+                _isGroupTypeAlreadyChanged = true;
+                
+                PictureGroupType newGroupType = _currentGroupType;
+    
+                if (details.scale < 1.0) {
+                  newGroupType = PictureGroupTypeUtils.next(_currentGroupType);
+                }
+                else {
+                  newGroupType = PictureGroupTypeUtils.previous(_currentGroupType);
+                }
+                
+                setState(() {
+                  _currentGroupType = newGroupType;
+                  pictureGroups = _pictureService.generatePicturesGroups(newGroupType, snapshot.data!);
+                });
+              },
+              onScaleEnd: (_) {
+                _isGroupTypeAlreadyChanged = false;
+              },
+              child: PictureList(
+                groupType: _currentGroupType, 
+                data: pictureGroups ?? []
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                children: [
+                  const Text('Network Error: fail to fetch pictures'),
+                  ElevatedButton(
+                    child: const Text('Retry'),
+                    onPressed: () {
+                      setState(() {
+                        _getUserPicturesFuture = _pictureService.getUserPictures();
+                      });
+                    },
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator()
+            );
+          }
+        }, 
+      ),
     );
   }
 
