@@ -4,6 +4,7 @@ import 'package:frontend/models/picture.dart';
 import 'package:frontend/models/pictures_group.dart';
 import 'package:frontend/repositories/picture.dart';
 import 'package:frontend/services/pictures.dart';
+import 'package:frontend/shared/globals.dart';
 
 class PhotosView extends StatefulWidget {
   const PhotosView({Key? key}) : super(key: key);
@@ -70,6 +71,7 @@ class _PhotosViewState extends State<PhotosView> with AutomaticKeepAliveClientMi
               child: Column(
                 children: [
                   const Text('Network Error: fail to fetch pictures'),
+                  const SizedBox(height: kSpace),
                   ElevatedButton(
                     child: const Text('Retry'),
                     onPressed: () {
