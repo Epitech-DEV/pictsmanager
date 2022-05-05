@@ -1,6 +1,4 @@
 
-import 'package:flutter/widgets.dart';
-
 class PictureData {
   const PictureData({
     required this.name, 
