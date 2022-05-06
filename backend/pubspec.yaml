@@ -8,9 +8,13 @@ environment:
 
 dependencies:
   postgres: ^2.4.3
+  dart_jsonwebtoken: ^2.4.1
+  encrypt: ^5.0.1
   path: ^1.8.0
-  backend_framework:
-    path: ../backend_framework
+  cobalt:
+    git: 
+      url: https://github.com/Shiranuit/Cobalt.git
+      ref: master
 
 dev_dependencies:
   lints: ^1.0.0
