@@ -1,21 +1,22 @@
+import 'package:mongo_dart/mongo_dart.dart';
+
 class User {
-  int id;
+  String? id;
   String username;
   String password;
 
-  User({required this.id, required this.username, required this.password});
+  User({this.id, required this.username, required this.password});
 
-  factory User.fromSQL(List<dynamic> document) {
-    return User(
-      id: document[0],
-      username: document[1],
-      password: document[2],
+  factory User.fromJson(Map<String, dynamic> doc) {
+    return User( 
+      id: (doc["_id"] as ObjectId).id.hexString,
+      username: doc["username"],
+      password: doc["password"],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      "id": id.toString(),
       "username": username,
       "password": password,
     };

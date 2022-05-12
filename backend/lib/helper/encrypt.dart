@@ -15,7 +15,7 @@ class EncryptHelper {
   }
 
   static bool match(String password, String encrypted) {
-    final decrypted = encrypter.decrypt64(encrypted, iv: IV.fromLength(16));
+    final String decrypted = encrypter.decrypt64(encrypted, iv: IV.fromLength(16));
     return password == decrypted;
   }
 }

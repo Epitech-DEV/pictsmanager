@@ -1,16 +1,21 @@
 import 'package:backend/controllers/auth.dart';
-import 'package:backend/repositories/user.dart';
 import 'package:backend/services/auth.dart';
-import 'package:backend/services/postgresql.dart';
+import 'package:backend/config/mongo.dart';
 import 'package:cobalt/backend.dart';
-
 void main(List<String> arguments) async {
+  /// Init Server
   Backend backend = Backend();
 
+  /// Init DB
+  await Mongo.start();
+
+  /// Init Controllers
   backend.registerController(AuthController());
-  backend.registerService(UserRepository());
-  backend.registerService(PostgresqlService());
+
+  /// Init Services
   backend.registerService(AuthService());
+
+  /// Define errors
   backend.addError(
     errorCode: "auth:password",
     message: "Password doesn't match the criteria",
@@ -31,6 +36,7 @@ void main(List<String> arguments) async {
     message: "Username or password is invalid",
     constructor: BadRequestError.new,
   );
-  await backend.getService<PostgresqlService>()!.start();
+
+  /// Start server
   backend.start();
 }

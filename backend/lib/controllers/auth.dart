@@ -1,4 +1,3 @@
-import 'package:backend/repositories/user.dart';
 import 'package:backend/services/auth.dart';
 import 'package:cobalt/backend.dart';
 
@@ -7,7 +6,6 @@ class AuthController with BackendControllerMixin {
   @Post(path: '/register')
   Future<Map> register(BackendRequest request) async {
     AuthService service = backend.getService<AuthService>()!;
-    UserRepository repository = backend.getService<UserRepository>()!;
     String username = request.get(ParamsType.body, "username");
     String password = request.get(ParamsType.body, "password");
 
@@ -16,9 +14,6 @@ class AuthController with BackendControllerMixin {
     }
     if (password.length < 2 || !RegExp(r'^[a-zA-Z0-9]+$').hasMatch(username)) {
       backend.throwError("auth:register:username");
-    }
-    if (await repository.exist(username)) {
-      backend.throwError("auth:register:username:exist");
     }
 
     String jwt = await service.register(username, password);
