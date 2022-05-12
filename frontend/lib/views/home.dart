@@ -14,7 +14,7 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   late PageController _viewController;
   late int _selectedView;
-  late List<Widget> _views;
+  late Map<String, Widget> _views;
 
   void _onPageSelected(int index) {
     setState(() {
@@ -27,22 +27,25 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     _selectedView = 0;
     _viewController = PageController(initialPage: _selectedView);
-    _views = const [
-      PhotosView(),
-      SearchView(),
-      ShareView(),
-      LibraryView(),
-    ];
+    _views = const {
+      'Photos': PhotosView(),
+      'Search': SearchView(),
+      'Share': ShareView(),
+      'Library': LibraryView(),
+    };
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(_views.keys.elementAt(_selectedView)),
+      ),
       body: PageView(
         controller: _viewController,
         physics: const NeverScrollableScrollPhysics(),
-        children: _views,
+        children: _views.values.toList(),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -55,24 +58,24 @@ class _HomeViewState extends State<HomeView> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(_selectedView == 0 ? Icons.photo : Icons.photo_outlined),
-            label: 'Photos',
+            label: _views.keys.elementAt(0),
           ),
           BottomNavigationBarItem(
             icon:
                 Icon(_selectedView == 1 ? Icons.search : Icons.search_outlined),
-            label: 'Recherche',
+            label: _views.keys.elementAt(1),
           ),
           BottomNavigationBarItem(
             icon: Icon(_selectedView == 2
                 ? Icons.people_alt
                 : Icons.people_alt_outlined),
-            label: 'Partage',
+            label: _views.keys.elementAt(2),
           ),
           BottomNavigationBarItem(
             icon: Icon(_selectedView == 3
                 ? Icons.photo_library
                 : Icons.photo_library_outlined),
-            label: 'Bibliothèque',
+            label: _views.keys.elementAt(3),
           ),
         ],
         currentIndex: _selectedView,
