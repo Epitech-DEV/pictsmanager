@@ -9,7 +9,13 @@ typedef DateComparator = bool Function(DateTime dateTime1, DateTime dateTime2);
 class PictureService {
   PictureService({required this.pictureRepository});
 
+  static PictureService? _pictureService;
   final PictureRepository pictureRepository;
+
+  static PictureService getInstance() {
+    _pictureService ??= PictureService(pictureRepository: PictureInMemoryRepository());
+    return _pictureService!;
+  }
 
   Future<List<PictureData>> getUserPictures() {
     return pictureRepository.getUserPictures();
@@ -29,6 +35,10 @@ class PictureService {
   /// Generate a list of [PicturesGroupData] for the given [picturesData]
   /// Groups are created by the [dateComparator] function.
   List<PicturesGroupData> _generateGroups(PictureGroupType type, List<PictureData> picturesData, DateComparator dateComparator) {
+    if (picturesData.isEmpty) {
+      return [];
+    }
+    
     List<PicturesGroupData> groups = [];
     
     DateTime currentDate = picturesData[0].date;

@@ -3,7 +3,7 @@ class PictureData {
   const PictureData({
     required this.name, 
     required this.url, 
-    required this.tags, 
+    this.tags = const [], 
     required this.date
   });
 
@@ -12,7 +12,7 @@ class PictureData {
   final List<String> tags;
   final DateTime date;
 
-  fromJson(Map<String, dynamic> json) {
+  factory PictureData.fromJson(Map<String, dynamic> json) {
     return PictureData(
       name: json['name'] as String,
       url: json['url'] as String,

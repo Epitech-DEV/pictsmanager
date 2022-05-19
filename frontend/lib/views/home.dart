@@ -49,8 +49,8 @@ class _HomeViewState extends State<HomeView> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        unselectedItemColor: Colors.grey,
-        selectedItemColor: Colors.lightBlue,
+        unselectedItemColor: Theme.of(context).unselectedWidgetColor,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
         showSelectedLabels: true,
         showUnselectedLabels: true,
         unselectedFontSize: 14,
