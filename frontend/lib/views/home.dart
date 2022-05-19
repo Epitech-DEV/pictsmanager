@@ -1,8 +1,10 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/views/library.dart';
 import 'package:frontend/views/photos.dart';
 import 'package:frontend/views/search.dart';
 import 'package:frontend/views/share.dart';
+import 'package:frontend/views/take_picture.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -15,6 +17,7 @@ class _HomeViewState extends State<HomeView> {
   late PageController _viewController;
   late int _selectedView;
   late List<Widget> _views;
+  late CameraDescription firstCamera;
 
   void _onPageSelected(int index) {
     setState(() {
@@ -36,9 +39,37 @@ class _HomeViewState extends State<HomeView> {
     super.initState();
   }
 
+  void openCamera() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    final cameras = await availableCameras();
+    firstCamera = cameras.first;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TakePictureScreen(
+          camera: firstCamera,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: ElevatedButton(
+        onPressed: openCamera,
+        child: const Icon(IconData(0xf60b, fontFamily: 'MaterialIcons')),
+        style: ButtonStyle(
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(40),
+            ),
+          ),
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+            const EdgeInsets.all(20),
+          ),
+        ),
+      ),
       body: PageView(
         controller: _viewController,
         physics: const NeverScrollableScrollPhysics(),

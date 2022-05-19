@@ -27,9 +27,7 @@ class _RegisterViewState extends State<RegisterView> {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => const HomeView()));
       }
-    } catch (error) {
-      print(error);
-    }
+    } catch (error) {}
   }
 
   List<Widget> registerForm() {

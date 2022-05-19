@@ -34,7 +34,6 @@ class _LoginViewState extends State<LoginView> {
       setState(() {
         loginError = true;
       });
-      print(error);
     }
   }
 
