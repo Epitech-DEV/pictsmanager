@@ -18,19 +18,19 @@ class PictureView extends StatelessWidget {
         title: Text(data.name),
         actions: [
           IconButton(
-            icon: Icon(Icons.share),
+            icon: const Icon(Icons.share),
             onPressed: () {
               // Todo : share image
             },
           ),
           IconButton(
-            icon: Icon(Icons.edit),
+            icon: const Icon(Icons.edit),
             onPressed: () {
               // Todo : edit image
             },
           ),
           IconButton(
-            icon: Icon(Icons.delete),
+            icon: const Icon(Icons.delete),
             onPressed: () {
               // Todo : delete image
             },
