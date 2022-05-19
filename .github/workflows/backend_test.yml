@@ -22,12 +22,15 @@ jobs:
       run:
         working-directory: ./backend
 
-    container:
-      image: google/dart:2.17.0
-
     steps:    
     # Setup Dart environment in order to run tests
     - uses: actions/checkout@v1
+
+    # Setup the flutter environment.
+    - uses: subosito/flutter-action@v1
+      with:
+        channel: 'stable' # 'dev', 'alpha', default to: 'stable'
+        flutter-version: '3.0.0' # you can also specify exact version of flutter
     
     - name: Install dependencies
       run: dart pub get
