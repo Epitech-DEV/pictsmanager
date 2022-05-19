@@ -20,12 +20,12 @@ jobs:
       run:
         working-directory: ./backend
 
+    container:
+      image: google/dart:latest
+
     steps:    
     # Setup Dart environment in order to run tests
     - uses: actions/checkout@v1
-    - uses: dart-lang/setup-dart@v1
-      with:
-        sdk: '2.16.x'
     
     - name: Install dependencies
       run: dart pub get
