@@ -17,7 +17,7 @@ class AuthService with BackendServiceMixin {
     final User user = User(username: username, password: EncryptHelper.encrypt(password));
     final WriteResult res = await users.insertOne(user.toJson());
     final String id = (res.document!["_id"] as ObjectId).id.hexString;
-    final String jwt = JWTService.generate(id);
+    final String jwt = backend.getService<JWTService>()!.generate(id);
     return jwt;
   }
 
@@ -27,7 +27,7 @@ class AuthService with BackendServiceMixin {
     if (doc == null ||  !EncryptHelper.match(password, user!.password)) {
       backend.throwError("auth:login:invalid");
     }
-    final String jwt = JWTService.generate(user!.id!);
+    final String jwt = backend.getService<JWTService>()!.generate(user!.id!);
     return jwt;
   }
 }

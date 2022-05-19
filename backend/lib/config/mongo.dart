@@ -7,7 +7,6 @@ class Mongo with BackendServiceMixin {
 
   /// Establish connection to MongoDB.
   static Future<void> start() async {
-
     String username = EnvHelper.read("DB_USERNAME") ?? "root";
     String password = EnvHelper.read("DB_USERNAME_PASSWORD") ?? "7ZiCx3x14BpWOCRH";
     String name = EnvHelper.read("DB_NAME") ?? "picturesmanager";
