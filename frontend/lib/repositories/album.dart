@@ -4,6 +4,7 @@ import 'package:frontend/models/picture.dart';
 
 abstract class AlbumRepository {
   Future<List<AlbumData>> getUserAlbums();
+  Future<AlbumData> createAlbum(String name);
 }
 
 class AlbumApiRepository extends AlbumRepository {
@@ -11,7 +12,13 @@ class AlbumApiRepository extends AlbumRepository {
   Future<List<AlbumData>> getUserAlbums() {
     // TODO: implement getUserAlbums
     throw UnimplementedError();
-  }  
+  }
+  
+  @override
+  Future<AlbumData> createAlbum(String name) {
+    // TODO: implement createAlbum
+    throw UnimplementedError();
+  }
 }
 
 class AlbumInMemoryRepository extends AlbumRepository {
@@ -86,6 +93,22 @@ class AlbumInMemoryRepository extends AlbumRepository {
     return Future.delayed(
       const Duration(seconds: 2),
       () => _albums,
+    );
+  }
+  
+  @override
+  Future<AlbumData> createAlbum(String name) {
+    AlbumData newAlbum = AlbumData(
+      name: name,
+      pictures: [],
+      createdAt: DateTime.now(),
+    );
+
+    _albums.add(newAlbum);
+
+    return Future.delayed(
+      const Duration(seconds: 2),
+      () => newAlbum,
     );
   }
   

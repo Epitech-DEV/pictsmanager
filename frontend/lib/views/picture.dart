@@ -37,24 +37,25 @@ class PictureView extends StatelessWidget {
           ),
         ],
       ),
-      body: AspectRatio(
-        aspectRatio: 1,
-        child: Container(
-          clipBehavior: Clip.hardEdge,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: CachedNetworkImage(
-            imageUrl: data.url,
-            fit: BoxFit.cover,
-            placeholder: (context, url) => Center(
-              child: Container(
-                color: Theme.of(context).primaryColor,
+      body: Container(
+        clipBehavior: Clip.hardEdge,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: InteractiveViewer(
+          child: Center(
+            child: CachedNetworkImage(
+              imageUrl: data.url,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => Center(
+                child: Container(
+                  color: Theme.of(context).primaryColor,
+                ),
               ),
-            ),
-            errorWidget: (context, url, error) => Center(
-              child: Container(
-                color: Theme.of(context).errorColor,
+              errorWidget: (context, url, error) => Center(
+                child: Container(
+                  color: Theme.of(context).errorColor,
+                ),
               ),
             ),
           ),
