@@ -2,34 +2,42 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/picture.dart';
-import 'package:frontend/views/picture.dart';
 
-class Picture extends StatelessWidget {
-  const Picture({ 
+class PictureView extends StatelessWidget {
+  const PictureView({ 
     required this.data,
     Key? key 
   }) : super(key: key);
 
   final PictureData data;
 
-  void viewImage(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) {
-        return PictureView(
-          data: data
-        );
-      }),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        viewImage(context);
-      },
-      child: AspectRatio(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(data.name),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: () {
+              // Todo : share image
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              // Todo : edit image
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () {
+              // Todo : delete image
+            },
+          ),
+        ],
+      ),
+      body: AspectRatio(
         aspectRatio: 1,
         child: Container(
           clipBehavior: Clip.hardEdge,
@@ -51,7 +59,7 @@ class Picture extends StatelessWidget {
             ),
           ),
         ),
-      ),
+      )
     );
   }
 }
