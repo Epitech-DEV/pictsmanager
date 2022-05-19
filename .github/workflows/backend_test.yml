@@ -23,7 +23,7 @@ jobs:
         working-directory: ./backend
 
     container:
-      image: google/dart:latest
+      image: google/dart:2.17.0
 
     steps:    
     # Setup Dart environment in order to run tests
