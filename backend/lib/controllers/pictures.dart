@@ -1,23 +1,34 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:backend/models/picture.dart';
 import 'package:backend/services/jwt.dart';
 import 'package:backend/services/pictures.dart';
 import 'package:cobalt/backend.dart';
+import 'package:cobalt/network/http_stream.dart';
 import 'package:cobalt/network/multipart_parser.dart';
 
 @ControllerInfo()
 class PicturesController with BackendControllerMixin {
-  @Get(path: '/')
-  Future<Map> get(BackendRequest request) async {
-    // Should get all pictures
-    return {};
+  @Get(path: '/download/:path')
+  HttpStream download(BackendRequest request) {
+    String path = request.get<String>(ParamsType.params, "path")!;
+    String fileType = path.split('.')[1];
+    HttpStream stream = HttpStream(
+      File('./pictures/$path').openRead(),
+      contentType: 'image/$fileType',
+    );
+    return stream;
   }
 
-  @Delete(path: '/')
-  Future<Map> delete(BackendRequest request) async {
-    // Should delete multiples pictures
-    return {};
+  @Get(path: '/:id')
+  Future<Map> get(BackendRequest request) async {
+    JWTService jwtService = backend.getService<JWTService>()!;
+    String owner = jwtService.verify(request)["id"];
+    String id = request.get<String>(ParamsType.params, "id")!;
+
+    Map picture = await backend.getService<PicturesService>()!.get(owner, id);
+    return picture;
   }
 
   @Post(path: '/upload')

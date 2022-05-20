@@ -1,4 +1,3 @@
-
 import 'package:frontend/models/picture.dart';
 
 abstract class PictureRepository {
@@ -8,7 +7,6 @@ abstract class PictureRepository {
 class PictureApiRepository extends PictureRepository {
   @override
   Future<List<PictureData>> getUserPictures() {
-    // TODO: implement getUserPicture
     throw UnimplementedError();
   }
 }
@@ -81,7 +79,6 @@ class PictureInMemoryRepository extends PictureRepository {
       tags: ['tag1', 'tag2'],
       date: DateTime(2021, 3, 21),
     ),
-
     PictureData(
       name: 'Picture 12',
       url: 'https://picsum.photos/id/11/760/380',

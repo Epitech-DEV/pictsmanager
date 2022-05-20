@@ -1,47 +1,55 @@
 import 'package:mongo_dart/mongo_dart.dart';
 
 class Album {
-  String? id;
-  String owner;
+  ObjectId? id;
+  ObjectId owner;
   String name;
-  List<String> pictures;
-  DateTime date;
+  List<ObjectId> pictures;
+  DateTime createdAt;
   Album({
     this.id,
     required this.owner,
     required this.name,
-    required this.date,
+    required this.createdAt,
     required this.pictures,
   });
 
-  factory Album.fromJson(Map<String, dynamic> doc) {
-    List<String> pictures =
-        List<String>.from(doc["pictures"].map((tag) => tag));
-
+  factory Album.fromJson(Map<String, dynamic> body) {
+    List<ObjectId> pictures = List<ObjectId>.from(
+      body["pictures"].map(
+        (tag) => tag as ObjectId,
+      ),
+    );
     return Album(
-      id: (doc["_id"] as ObjectId).id.hexString,
-      owner: doc["owner"],
-      name: doc["name"],
+      id: body["_id"] as ObjectId,
+      owner: body["owner"] as ObjectId,
+      name: body["name"],
       pictures: pictures,
-      date: doc["date"],
+      createdAt: body["createdAt"],
     );
   }
 
-  Map<String, dynamic> toJson({bool showId = true}) {
-    if (showId) {
-      return {
-        "id": id!,
-        "owner": owner,
-        "name": name,
-        "pictures": pictures,
-        "date": date.toString(),
-      };
-    }
+  Map<String, dynamic> toMongo() {
     return {
       "owner": owner,
       "name": name,
       "pictures": pictures,
-      "date": date.toString(),
+      "createdAt": createdAt,
+    };
+  }
+
+  Map<String, dynamic> toJson() {
+    List<String> pictures = List<String>.from(
+      this.pictures.map(
+            (picture) => picture.toHexString(),
+          ),
+    );
+    return {
+      "id": id!.toHexString(),
+      "owner": owner.toHexString(),
+      "name": name,
+      "pictures": pictures,
+      "date": createdAt.toString(),
     };
   }
 }

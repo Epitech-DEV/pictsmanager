@@ -1,3 +1,4 @@
+import 'package:backend/controllers/albums.dart';
 import 'package:backend/controllers/auth.dart';
 import 'package:backend/controllers/pictures.dart';
 import 'package:backend/services/albums.dart';
@@ -17,6 +18,7 @@ void main(List<String> arguments) async {
   /// Init Controllers
   backend.registerController(AuthController());
   backend.registerController(PicturesController());
+  backend.registerController(AlbumsController());
 
   /// Init Services
   backend.registerService(AuthService());
@@ -53,6 +55,11 @@ void main(List<String> arguments) async {
   backend.addError(
     errorCode: "picture:upload:file",
     message: "File invalid",
+    constructor: BadRequestError.new,
+  );
+  backend.addError(
+    errorCode: "picture:found:file",
+    message: "File not found",
     constructor: BadRequestError.new,
   );
 

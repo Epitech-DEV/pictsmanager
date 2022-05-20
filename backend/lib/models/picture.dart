@@ -1,47 +1,54 @@
 import 'package:mongo_dart/mongo_dart.dart';
 
 class Picture {
-  String? id;
-  String owner;
+  ObjectId? id;
+  ObjectId owner;
   String name;
   List<String> tags;
-  DateTime date;
+  DateTime createdAt;
   String path;
-  Picture(
-      {this.id,
-      required this.owner,
-      required this.name,
-      required this.tags,
-      required this.date,
-      required this.path});
+  Picture({
+    this.id,
+    required this.owner,
+    required this.name,
+    required this.tags,
+    required this.createdAt,
+    required this.path,
+  });
 
-  factory Picture.fromJson(Map<String, dynamic> doc) {
+  factory Picture.fromJson(Map<String, dynamic> body) {
+    List<String> tags = List<String>.from(
+      body["tags"].map(
+        (tag) => tag,
+      ),
+    );
     return Picture(
-      id: (doc["_id"] as ObjectId).id.hexString,
-      owner: doc["owner"],
-      name: doc["name"],
-      tags: doc["tags"],
-      date: doc["date"],
-      path: doc["path"],
+      id: body["_id"] as ObjectId,
+      owner: body["owner"] as ObjectId,
+      name: body["name"],
+      tags: tags,
+      createdAt: body["createdAt"] as DateTime,
+      path: body["path"],
     );
   }
 
-  Map<String, dynamic> toJson({bool showId = true}) {
-    if (showId) {
-      return {
-        "id": id!,
-        "owner": owner,
-        "name": name,
-        "tags": tags,
-        "date": date.toString(),
-        "path": path,
-      };
-    }
+  Map<String, dynamic> toMongo() {
     return {
       "owner": owner,
       "name": name,
       "tags": tags,
-      "date": date.toString(),
+      "createdAt": createdAt,
+      "path": path,
+    };
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id!.toHexString(),
+      "owner": owner.toHexString(),
+      "name": name,
+      "tags": tags,
+      "createdAt": createdAt.toString(),
       "path": path,
     };
   }
