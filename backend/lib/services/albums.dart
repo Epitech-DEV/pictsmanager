@@ -20,6 +20,12 @@ class AlbumsService with BackendServiceMixin {
     return album;
   }
 
+  Future<void> deleteAlbum(String owner, String id) async {
+    await albumsCollection.deleteOne(
+      where.eq("_id", ObjectId.parse(id)).eq("owner", ObjectId.parse(owner)),
+    );
+  }
+
   Future<List<Map>> getAll(String owner) async {
     /// Get albums with pictures (which are Object Ids)
     List<Map> albums = await albumsCollection
