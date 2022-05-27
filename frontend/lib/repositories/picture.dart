@@ -1,4 +1,3 @@
-
 import 'package:frontend/models/picture.dart';
 
 abstract class PictureRepository {
@@ -9,7 +8,6 @@ abstract class PictureRepository {
 class PictureApiRepository extends PictureRepository {
   @override
   Future<List<PictureData>> getUserPictures() {
-    // TODO: implement getUserPicture
     throw UnimplementedError();
   }
   

@@ -10,7 +10,7 @@ class AuthController with BackendControllerMixin {
     String password = request.get(ParamsType.body, "password");
 
     if (password.length < 8 || password.contains(" ")) {
-      backend.throwError("auth:password");
+      backend.throwError("auth:register:password");
     }
     if (password.length < 2 || !RegExp(r'^[a-zA-Z0-9]+$').hasMatch(username)) {
       backend.throwError("auth:register:username");
