@@ -21,6 +21,16 @@ class PicturesController with BackendControllerMixin {
     return stream;
   }
 
+  @Get(path: '/')
+  Future<List> getAll(BackendRequest request) async {
+    JWTService jwtService = backend.getService<JWTService>()!;
+    String owner = jwtService.verify(request)["id"];
+
+    List<Map> picture =
+        await backend.getService<PicturesService>()!.getAll(owner);
+    return picture;
+  }
+
   @Get(path: '/:id')
   Future<Map> get(BackendRequest request) async {
     JWTService jwtService = backend.getService<JWTService>()!;

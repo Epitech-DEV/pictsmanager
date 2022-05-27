@@ -49,7 +49,7 @@ class Album {
       "owner": owner.toHexString(),
       "name": name,
       "pictures": pictures,
-      "date": createdAt.toString(),
+      "createdAt": createdAt.toString(),
     };
   }
 }

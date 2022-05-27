@@ -11,20 +11,19 @@ class PicturesService with BackendServiceMixin {
   List<String> filesAccepted = ["png", "jpeg", "jpg"];
 
   Future<List<Map>> getAll(String owner) async {
-    List<Map> pictures = await this.pictures.find(
-      {"owner": ObjectId.parse(owner)},
-    ).map(
+    List<Map> pictures = await this
+        .pictures
+        .find(
+          where
+              .eq("owner", ObjectId.parse(owner))
+              .sortBy("createdAt", descending: true),
+        )
+        .map(
       (body) {
         Picture picture = Picture.fromJson(body);
         return picture.toJson();
       },
     ).toList();
-
-    pictures.sort(
-      (a, b) {
-        return b["createdAt"].compareTo(a["createdAt"]);
-      },
-    );
     return pictures;
   }
 
