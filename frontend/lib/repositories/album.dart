@@ -5,6 +5,7 @@ import 'package:frontend/models/picture.dart';
 abstract class AlbumRepository {
   Future<List<AlbumData>> getUserAlbums();
   Future<AlbumData> createAlbum(String name);
+  Future<List<AlbumData>> getSharedAlbums();
 }
 
 class AlbumApiRepository extends AlbumRepository {
@@ -17,6 +18,12 @@ class AlbumApiRepository extends AlbumRepository {
   @override
   Future<AlbumData> createAlbum(String name) {
     // TODO: implement createAlbum
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<List<AlbumData>> getSharedAlbums() {
+    // TODO: implement getSharedAlbum
     throw UnimplementedError();
   }
 }
@@ -88,6 +95,11 @@ class AlbumInMemoryRepository extends AlbumRepository {
     ),
   ];
 
+  final List<String> _sharedAlbums = [
+    "Album 1",
+    "Album 3",
+  ];
+
   @override
   Future<List<AlbumData>> getUserAlbums() {
     return Future.delayed(
@@ -112,4 +124,11 @@ class AlbumInMemoryRepository extends AlbumRepository {
     );
   }
   
+  @override
+  Future<List<AlbumData>> getSharedAlbums() {
+    return Future.delayed(
+      const Duration(seconds: 2),
+      () => _albums.where((album) => _sharedAlbums.contains(album.name)).toList(),
+    );
+  }  
 }

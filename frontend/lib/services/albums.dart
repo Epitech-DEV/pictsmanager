@@ -22,4 +22,8 @@ class AlbumService {
   Future<AlbumData> createAlbum({required String name}) async {
     return albumRepository.createAlbum(name);
   }
+
+  Future<List<AlbumData>> getSharedAlbums() async {
+    return albumRepository.getSharedAlbums();
+  }
 }

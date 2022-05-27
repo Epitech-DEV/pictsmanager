@@ -21,6 +21,10 @@ class PictureService {
     return pictureRepository.getUserPictures();
   }
 
+  Future<List<PictureData>> getSharedPictures() {
+    return pictureRepository.getSharedPictures();
+  }
+
   List<PicturesGroupData> generatePicturesGroups(PictureGroupType type, List<PictureData> picturesData) {
     switch (type) {
       case PictureGroupType.day:
