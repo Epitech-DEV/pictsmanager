@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/custom_elevated_button.dart';
 import 'package:frontend/views/picture_add_tags_and_name.dart';
-import 'package:intl/intl.dart';
 
 class DisplayPictureScreen extends StatefulWidget {
   const DisplayPictureScreen({

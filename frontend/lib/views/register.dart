@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/services/authentification.dart';
+import 'package:frontend/utils/custom_exception.dart';
 import 'package:frontend/validators/validators.dart';
 import 'package:frontend/views/home.dart';
 
@@ -12,33 +13,34 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
-  String username = "";
-  String password = "";
-
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
   final _registerFormKey = GlobalKey<FormState>();
 
   Future<void> register() async {
-    try {
-      if (_registerFormKey.currentState!.validate()) {
-        await Authentification.register();
+    if (_registerFormKey.currentState!.validate()) {
+      try {
+        await Authentification.register(
+          usernameController.text,
+          passwordController.text,
+        );
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => const HomeView()));
+      } on CustomException catch (error) {
+        SnackBar snackBar = SnackBar(content: Text(error.getMessage));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      } catch (error) {
+        SnackBar snackBar = const SnackBar(content: Text('Failed to register'));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
-    } catch (error) {}
+    }
   }
 
   List<Widget> registerForm() {
     return [
       TextFormField(
         decoration: const InputDecoration(labelText: "Username"),
-        onChanged: (value) => {
-          setState(() {
-            username = value;
-          })
-        },
         validator: Validators.usernameValidator,
         controller: usernameController,
         keyboardType: TextInputType.name,
@@ -49,11 +51,6 @@ class _RegisterViewState extends State<RegisterView> {
       TextFormField(
         obscureText: true,
         decoration: const InputDecoration(labelText: "Password"),
-        onChanged: (value) => {
-          setState(() {
-            password = value;
-          })
-        },
         validator: Validators.registerPasswordValidator,
         controller: passwordController,
       ),

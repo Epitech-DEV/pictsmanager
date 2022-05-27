@@ -1,14 +1,20 @@
 name: backend
-description: A sample command-line application.
+description: backend using Yannick framework.
+publish_to: none
 version: 1.0.0
-# homepage: https://www.example.com
 
 environment:
   sdk: '>=2.16.2 <3.0.0'
 
-
-# dependencies:
-#   path: ^1.8.0
+dependencies:
+  mongo_dart: ^0.7.4+1
+  dart_jsonwebtoken: ^2.4.1
+  encrypt: ^5.0.1
+  path: ^1.8.0
+  cobalt:
+    git: 
+      url: https://github.com/Shiranuit/Cobalt.git
+      ref: master
 
 dev_dependencies:
   lints: ^1.0.0

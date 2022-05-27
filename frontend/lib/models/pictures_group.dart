@@ -2,10 +2,34 @@
 import 'package:flutter/widgets.dart';
 import 'package:frontend/models/picture.dart';
 
-enum GroupType {
+enum PictureGroupType {
   day,
   month,
   year,
+}
+
+class PictureGroupTypeUtils {
+  static PictureGroupType previous(PictureGroupType current) {
+    switch (current) {
+      case PictureGroupType.year:
+        return PictureGroupType.month;
+      case PictureGroupType.month:
+        return PictureGroupType.day;
+      default:
+        return current;
+    }
+  }
+
+  static PictureGroupType next(PictureGroupType current) {
+    switch (current) {
+      case PictureGroupType.day:
+        return PictureGroupType.month;
+      case PictureGroupType.month:
+        return PictureGroupType.year;
+      default:
+        return current;
+    }
+  }
 }
 
 class PicturesGroupData extends ChangeNotifier {
@@ -15,7 +39,7 @@ class PicturesGroupData extends ChangeNotifier {
     required this.pictures,
   });
 
-  final GroupType type;
+  final PictureGroupType type;
   final DateTime date;
   final List<PictureData> pictures;
 

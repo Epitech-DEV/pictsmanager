@@ -1,6 +1,8 @@
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/picture.dart';
+import 'package:frontend/views/picture.dart';
 
 class Picture extends StatelessWidget {
   const Picture({ 
@@ -10,16 +12,45 @@ class Picture extends StatelessWidget {
 
   final PictureData data;
 
+  void viewImage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) {
+        return PictureView(
+          data: data
+        );
+      }),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      clipBehavior: Clip.hardEdge,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: Image.network(
-        data.url,
-        fit: BoxFit.cover,
+    return InkWell(
+      onTap: () {
+        viewImage(context);
+      },
+      child: AspectRatio(
+        aspectRatio: 1,
+        child: Container(
+          clipBehavior: Clip.hardEdge,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: CachedNetworkImage(
+            imageUrl: data.url,
+            fit: BoxFit.cover,
+            placeholder: (context, url) => Center(
+              child: Container(
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+            errorWidget: (context, url, error) => Center(
+              child: Container(
+                color: Theme.of(context).errorColor,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

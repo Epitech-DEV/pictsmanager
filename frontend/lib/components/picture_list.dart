@@ -11,7 +11,7 @@ class PictureList extends StatefulWidget {
     Key? key 
   }) : super(key: key);
 
-  final GroupType groupType;
+  final PictureGroupType groupType;
   final List<PicturesGroupData> data;
 
   @override
@@ -21,19 +21,24 @@ class PictureList extends StatefulWidget {
 class _PictureListState extends State<PictureList> {
   @override
   Widget build(BuildContext context) {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          final changeMonth = index != 0 ? widget.data[index - 1].date.month != widget.data[index].date.month : false;
-          final changeYear = index != 0 ? widget.data[index - 1].date.year != widget.data[index].date.year : false;
-
-          return PicturesGroup(
-            data: widget.data[index],
-            changeMonth: changeMonth,
-            changeYear: changeYear,
-          );
-        },
-      ),
+    return CustomScrollView(
+      slivers: [
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              final monthHasChanged = index != 0 ? widget.data[index - 1].month != widget.data[index].month : false;
+              final yearHasChanged = index != 0 ? widget.data[index - 1].year != widget.data[index].year : false;
+      
+              return PicturesGroup(
+                data: widget.data[index],
+                monthHasChanged: monthHasChanged,
+                yearHasChanged: yearHasChanged,
+              );
+            },
+            childCount: widget.data.length,
+          ),
+        ),
+      ],
     );
   }
 }

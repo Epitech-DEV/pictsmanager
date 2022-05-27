@@ -1,3 +1,5 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:frontend/utils/custom_exception.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
@@ -5,38 +7,82 @@ import 'dart:convert';
 class Authentification {
   static String jwt = "";
 
-  static Future<Object> login() async {
-    final response = await http
-        .get(Uri.parse('https://jsonplaceholder.typicode.com/albums/1'));
+  static Future<Object> login(String username, String password) async {
+    final Object body = {
+      "username": username,
+      "password": password,
+    };
+    print(body);
+    final jsonResponse = await http.post(
+      Uri.parse('http://192.168.1.153:8080/auth/login'),
+      body: jsonEncode(body),
+    );
+    print(jsonResponse);
+    final response = jsonDecode(jsonResponse.body);
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+    if (jsonResponse.statusCode == 200) {
+      FlutterSecureStorage storage = const FlutterSecureStorage();
+      storage.write(key: "token", value: response['result']['accessToken']);
+      return response;
     } else {
-      switch (response.statusCode) {
-        case 401:
-          throw Exception('Invalid information');
+      switch (jsonResponse.statusCode) {
+        case 400:
+          throw CustomException(
+            message: 'Invalid credentials',
+            errorCode: jsonResponse.statusCode,
+          );
         case 500:
-          throw Exception('Internal server error');
+          throw CustomException(
+            message: 'Internal server error',
+            errorCode: jsonResponse.statusCode,
+          );
         default:
-          throw Exception('Failed to login');
+          throw CustomException(
+            message: 'Failed to login',
+            errorCode: jsonResponse.statusCode,
+          );
       }
     }
   }
 
-  static Future<Object> register() async {
-    final response = await http
-        .get(Uri.parse('https://jsonplaceholder.typicode.com/albums/1'));
+  static Future<Object> register(String username, String password) async {
+    final Object body = {
+      "username": username,
+      "password": password,
+    };
+    final jsonResponse = await http.post(
+      Uri.parse('http://192.168.1.153:8080/auth/register'),
+      body: jsonEncode(body),
+    );
+    final response = jsonDecode(jsonResponse.body);
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+    if (jsonResponse.statusCode == 200) {
+      FlutterSecureStorage storage = const FlutterSecureStorage();
+      storage.write(key: "token", value: response['result']['accessToken']);
+      return response;
     } else {
+      print(response.body);
       switch (response.statusCode) {
+        case 400:
+          throw CustomException(
+            message: 'User already exists',
+            errorCode: response.statusCode,
+          );
         case 401:
-          throw Exception('Invalid information');
+          throw CustomException(
+            message: 'Invalid information',
+            errorCode: response.statusCode,
+          );
         case 500:
-          throw Exception('Internal server error');
+          throw CustomException(
+            message: 'Internal server error',
+            errorCode: response.statusCode,
+          );
         default:
-          throw Exception('Failed to register');
+          throw CustomException(
+            message: 'Failed to register',
+            errorCode: response.statusCode,
+          );
       }
     }
   }
