@@ -6,9 +6,11 @@ on:
       - master
     paths:
       - 'backend/**'
+      - '.github/**'
   pull_request:
     paths:
       - 'backend/**'
+      - '.github/**'
 
 jobs:
   test:
@@ -23,9 +25,12 @@ jobs:
     steps:    
     # Setup Dart environment in order to run tests
     - uses: actions/checkout@v1
-    - uses: dart-lang/setup-dart@v1
+
+    # Setup the flutter environment.
+    - uses: subosito/flutter-action@v1
       with:
-        sdk: '2.16.x'
+        channel: 'stable' # 'dev', 'alpha', default to: 'stable'
+        flutter-version: '3.0.0' # you can also specify exact version of flutter
     
     - name: Install dependencies
       run: dart pub get

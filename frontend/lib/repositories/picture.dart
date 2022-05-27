@@ -2,11 +2,18 @@ import 'package:frontend/models/picture.dart';
 
 abstract class PictureRepository {
   Future<List<PictureData>> getUserPictures();
+  Future<List<PictureData>> getSharedPictures();
 }
 
 class PictureApiRepository extends PictureRepository {
   @override
   Future<List<PictureData>> getUserPictures() {
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<List<PictureData>> getSharedPictures() {
+    // TODO: implement getSharedPictures
     throw UnimplementedError();
   }
 }
@@ -254,12 +261,34 @@ class PictureInMemoryRepository extends PictureRepository {
       date: DateTime(2021, 3, 21),
     ),
   ];
+  List<String> sharedPictures = [
+    "Picture 1",
+    "Picture 3",
+    "Picture 4",
+    "Picture 5",
+    "Picture 8",
+    "Picture 9",
+    "Picture 10",
+    "Picture 12",
+    "Picture 13",
+    "Picture 14",
+    "Picture 15",
+  ];
+
 
   @override
   Future<List<PictureData>> getUserPictures() {
     return Future.delayed(
       const Duration(seconds: 2),
       () => userPictures,
+    );
+  }
+  
+  @override
+  Future<List<PictureData>> getSharedPictures() {
+    return Future.delayed(
+      const Duration(seconds: 2),
+      () => userPictures.where((element) => sharedPictures.contains(element.name)).toList(),
     );
   }
 }
