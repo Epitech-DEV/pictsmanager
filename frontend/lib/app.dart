@@ -1,15 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/states/login_state.dart';
+import 'package:frontend/states/theme_state.dart';
 import 'package:frontend/views/home.dart';
+import 'package:frontend/views/login.dart';
+import 'package:provider/provider.dart';
 
 class PictsManagerApp extends StatelessWidget {
   const PictsManagerApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Picts Manager',
-      theme: ThemeData.dark(),
-      home: const HomeView(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<LoginState>(
+          create: (_) => LoginState(),
+        ),
+        ChangeNotifierProvider<ThemeState>(
+          create: (_) => ThemeState(useDarkTheme: false),
+        ),
+      ],
+      builder: (context, _) => Consumer2<LoginState, ThemeState>(
+        builder: (context, LoginState loginState, themeState, _) => MaterialApp(
+          title: 'PictsManager',
+          themeMode: themeState.themeMode,
+          theme: ThemeState.lightTheme,
+          darkTheme: ThemeState.darkTheme,
+          home: loginState.isLoggedIn ? const HomeView() : const LoginView(),
+        ),
+      )
     );
   }
 }
