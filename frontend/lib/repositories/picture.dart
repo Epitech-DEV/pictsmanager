@@ -2,7 +2,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:frontend/models/picture.dart';
 import 'package:frontend/repositories/api.dart';
 import 'package:http/http.dart' as http;
