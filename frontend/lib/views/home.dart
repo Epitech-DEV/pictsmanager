@@ -1,8 +1,10 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/views/library.dart';
 import 'package:frontend/views/photos.dart';
 import 'package:frontend/views/search.dart';
 import 'package:frontend/views/share.dart';
+import 'package:frontend/views/take_picture.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -14,7 +16,22 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   late PageController _viewController;
   late int _selectedView;
+  late CameraDescription firstCamera;
   late Map<String, Widget> _views;
+
+  void openCamera() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    final cameras = await availableCameras();
+    firstCamera = cameras.first;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TakePictureScreen(
+          camera: firstCamera,
+        ),
+      ),
+    );
+  }
 
   void _onPageSelected(int index) {
     setState(() {
@@ -46,6 +63,11 @@ class _HomeViewState extends State<HomeView> {
         controller: _viewController,
         physics: const NeverScrollableScrollPhysics(),
         children: _views.values.toList(),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: openCamera,
+        tooltip: 'Open Camera',
+        child: const Icon(Icons.camera),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,

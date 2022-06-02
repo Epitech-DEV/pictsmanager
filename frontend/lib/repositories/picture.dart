@@ -1,11 +1,26 @@
+
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter/widgets.dart';
 import 'package:frontend/models/picture.dart';
+import 'package:frontend/repositories/api.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
 
 abstract class PictureRepository {
   Future<List<PictureData>> getUserPictures();
   Future<List<PictureData>> getSharedPictures();
+  Future<void> uploadPicture(File imageFile);
 }
 
 class PictureApiRepository extends PictureRepository {
+  late ApiDatasource api;
+
+  PictureApiRepository() {
+    api = ApiDatasource.instance;
+  }
+
   @override
   Future<List<PictureData>> getUserPictures() {
     throw UnimplementedError();
@@ -15,6 +30,25 @@ class PictureApiRepository extends PictureRepository {
   Future<List<PictureData>> getSharedPictures() {
     // TODO: implement getSharedPictures
     throw UnimplementedError();
+  }
+  
+  @override
+  Future<void> uploadPicture(File imageFile) async {
+    var imageStream = http.ByteStream(imageFile.openRead());
+    imageStream.cast();
+
+    var imageLength = await imageFile.length();
+    var imageMultipartFile = http.MultipartFile('file', imageStream, imageLength,
+        filename: basename(imageFile.path));
+
+    // TODO: implement uploadPicture
+    final response = await api.multipart('auth/login', [imageMultipartFile]);
+    debugPrint(response.statusCode.toString());
+
+    // listen for response
+    response.stream.transform(utf8.decoder).listen((value) {
+      debugPrint(value);
+    });
   }
 }
 
@@ -290,5 +324,10 @@ class PictureInMemoryRepository extends PictureRepository {
       const Duration(seconds: 2),
       () => userPictures.where((element) => sharedPictures.contains(element.name)).toList(),
     );
+  }
+  
+  @override
+  Future<void> uploadPicture(File imageFile) {
+    return Future.delayed(const Duration(seconds: 2));
   }
 }
