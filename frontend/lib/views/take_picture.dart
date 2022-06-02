@@ -53,7 +53,9 @@ class TakePictureScreenState extends State<TakePictureScreen> {
           ),
         ),
       );
-    } catch (e) {}
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   void _switchFlashState() {

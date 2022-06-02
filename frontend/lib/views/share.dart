@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/album.dart';
-import 'package:frontend/components/album_list.dart';
-import 'package:frontend/components/picture_group_list.dart';
 import 'package:frontend/models/album.dart';
 import 'package:frontend/models/picture.dart';
 import 'package:frontend/models/pictures_group.dart';
