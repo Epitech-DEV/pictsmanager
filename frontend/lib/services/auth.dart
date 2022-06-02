@@ -19,7 +19,12 @@ class AuthService {
   }
 
   Future<void> register(String username, String password) async {
-    return await AuthApiRepository().register(username, password);
+    try {
+      await AuthApiRepository().register(username, password);
+      loginState.setLoggedIn(true);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<void> login(String username, String password) async {

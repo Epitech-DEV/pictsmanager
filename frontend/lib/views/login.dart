@@ -33,11 +33,6 @@ class _LoginViewState extends State<LoginView> {
           usernameController.text,
           passwordController.text,
         );
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeView()),
-          (Route<dynamic> route) => false,
-        );
       } on ApiError catch (error) {
         SnackBar snackBar = SnackBar(content: Text(error.message));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
