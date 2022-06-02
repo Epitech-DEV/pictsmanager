@@ -7,17 +7,31 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'dart:io';
 
 class PicturesService with BackendServiceMixin {
-  DbCollection pictures = Mongo.db.collection('pictures');
+  DbCollection picturesCollection = Mongo.db.collection('pictures');
+  DbCollection albumsCollection = Mongo.db.collection('albums');
   List<String> filesAccepted = ["png", "jpeg", "jpg"];
 
+  Future<void> deletePictures(String owner, List<String> ids) async {
+    final List<ObjectId> objectIds =
+        ids.map((id) => ObjectId.parse(id)).toList();
+    await albumsCollection.updateMany(
+      where.eq("owner", ObjectId.parse(owner)),
+      {
+        "\$pull": {
+          "pictures": {"\$in": objectIds}
+        }
+      },
+    );
+    await picturesCollection.deleteMany(where.oneFrom("_id", objectIds));
+  }
+
   Future<List<Map>> getAll(String owner) async {
-    List<Map> pictures = await this
-        .pictures
+    List<Map> pictures = await picturesCollection
         .find(
-          where
-              .eq("owner", ObjectId.parse(owner))
-              .sortBy("createdAt", descending: true),
-        )
+      where
+          .eq("owner", ObjectId.parse(owner))
+          .sortBy("createdAt", descending: true),
+    )
         .map(
       (body) {
         Picture picture = Picture.fromJson(body);
@@ -28,7 +42,7 @@ class PicturesService with BackendServiceMixin {
   }
 
   Future<Map<String, dynamic>> get(String owner, String id) async {
-    Map<String, dynamic>? picture = await pictures.findOne(
+    Map<String, dynamic>? picture = await picturesCollection.findOne(
       {
         "owner": ObjectId.parse(owner),
         "_id": ObjectId.parse(id),
@@ -66,7 +80,7 @@ class PicturesService with BackendServiceMixin {
       createdAt: DateTime.now().toUtc(),
       path: path,
     );
-    final WriteResult res = await pictures.insertOne(
+    final WriteResult res = await picturesCollection.insertOne(
       picture.toMongo(),
     );
     picture.id = res.document!["_id"] as ObjectId;

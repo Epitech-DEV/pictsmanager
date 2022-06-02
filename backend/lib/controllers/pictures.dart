@@ -31,6 +31,18 @@ class PicturesController with BackendControllerMixin {
     return picture;
   }
 
+  @Delete(path: '/')
+  Future<Map> delete(BackendRequest request) async {
+    JWTService jwtService = backend.getService<JWTService>()!;
+    String owner = jwtService.verify(request)["id"];
+    List<String> pictures =
+        List<String>.from(request.get(ParamsType.body, "pictures"));
+    await backend
+        .getService<PicturesService>()!
+        .deletePictures(owner, pictures);
+    return {};
+  }
+
   @Get(path: '/:id')
   Future<Map> get(BackendRequest request) async {
     JWTService jwtService = backend.getService<JWTService>()!;

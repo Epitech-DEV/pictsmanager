@@ -5,8 +5,8 @@ import 'package:cobalt/core/service/backend_service.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class AlbumsService with BackendServiceMixin {
-  DbCollection albums = Mongo.db.collection('albums');
-  DbCollection pictures = Mongo.db.collection('pictures');
+  DbCollection albumsCollection = Mongo.db.collection('albums');
+  DbCollection picturesCollection = Mongo.db.collection('pictures');
 
   Future<Album> create(String owner, String name) async {
     Album album = Album(
@@ -15,15 +15,36 @@ class AlbumsService with BackendServiceMixin {
       createdAt: DateTime.now().toUtc(),
       pictures: [],
     );
-    final WriteResult res = await albums.insertOne(album.toMongo());
+    final WriteResult res = await albumsCollection.insertOne(album.toMongo());
     album.id = res.document!["_id"] as ObjectId;
     return album;
   }
 
+  Future<void> deleteAlbum(String owner, String id) async {
+    await albumsCollection.deleteOne(
+      where.eq("_id", ObjectId.parse(id)).eq("owner", ObjectId.parse(owner)),
+    );
+  }
+
+  Future<void> deletePictures(
+      String owner, String albumId, List<String> pictureIds) async {
+    final List<ObjectId> objectIds =
+        pictureIds.map((id) => ObjectId.parse(id)).toList();
+    await albumsCollection.updateMany(
+      where
+          .eq("owner", ObjectId.parse(owner))
+          .eq("_id", ObjectId.parse(albumId)),
+      {
+        "\$pull": {
+          "pictures": {"\$in": objectIds}
+        }
+      },
+    );
+  }
+
   Future<List<Map>> getAll(String owner) async {
     /// Get albums with pictures (which are Object Ids)
-    List<Map> albums = await this
-        .albums
+    List<Map> albums = await albumsCollection
         .find(where
             .eq("owner", ObjectId.parse(owner))
             .sortBy("createdAt", descending: true))
@@ -39,7 +60,7 @@ class AlbumsService with BackendServiceMixin {
           .map((id) => ObjectId.parse(id))
           .toList();
 
-      final fetchedPictures = await pictures
+      final fetchedPictures = await picturesCollection
           .find(where.oneFrom('_id', ids).sortBy('createdAt', descending: true))
           .map((picture) => Picture.fromJson(picture).toJson())
           .toList();
@@ -50,7 +71,7 @@ class AlbumsService with BackendServiceMixin {
 
   Future<void> addPicture(String owner, String album, String picture) async {
     /// Miss owner rights check
-    await albums.updateOne(
+    await albumsCollection.updateOne(
       {"_id": ObjectId.parse(album)},
       modify.addToSet(
         "pictures",
@@ -61,7 +82,7 @@ class AlbumsService with BackendServiceMixin {
 
   Future<void> removePicture(String owner, String album, String picture) async {
     /// Miss owner rights check
-    await albums.updateOne(
+    await albumsCollection.updateOne(
       {"_id": ObjectId.parse(album)},
       modify.pull(
         "pictures",
