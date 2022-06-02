@@ -26,6 +26,22 @@ class AlbumsService with BackendServiceMixin {
     );
   }
 
+  Future<void> deletePictures(
+      String owner, String albumId, List<String> pictureIds) async {
+    final List<ObjectId> objectIds =
+        pictureIds.map((id) => ObjectId.parse(id)).toList();
+    await albumsCollection.updateMany(
+      where
+          .eq("owner", ObjectId.parse(owner))
+          .eq("_id", ObjectId.parse(albumId)),
+      {
+        "\$pull": {
+          "pictures": {"\$in": objectIds}
+        }
+      },
+    );
+  }
+
   Future<List<Map>> getAll(String owner) async {
     /// Get albums with pictures (which are Object Ids)
     List<Map> albums = await albumsCollection

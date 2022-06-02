@@ -34,6 +34,19 @@ class AlbumsController with BackendControllerMixin {
     return {};
   }
 
+  @Delete(path: '/pictures')
+  Future<Map> deletePictures(BackendRequest request) async {
+    JWTService jwtService = backend.getService<JWTService>()!;
+    String owner = jwtService.verify(request)["id"];
+    String album = request.get(ParamsType.body, "album");
+    List<String> pictures =
+        List<String>.from(request.get(ParamsType.body, "pictures"));
+    await backend
+        .getService<AlbumsService>()!
+        .deletePictures(owner, album, pictures);
+    return {};
+  }
+
   @Post(path: '/add')
   Future<Map> add(BackendRequest request) async {
     JWTService jwtService = backend.getService<JWTService>()!;
