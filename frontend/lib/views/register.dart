@@ -25,8 +25,11 @@ class _RegisterViewState extends State<RegisterView> {
           usernameController.text,
           passwordController.text,
         );
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const HomeView()));
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeView()),
+          (Route<dynamic> route) => false,
+        );
       } on CustomException catch (error) {
         SnackBar snackBar = SnackBar(content: Text(error.getMessage));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);

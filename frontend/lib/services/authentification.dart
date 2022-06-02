@@ -61,27 +61,27 @@ class Authentification {
       storage.write(key: "token", value: response['result']['accessToken']);
       return response;
     } else {
-      print(response.body);
-      switch (response.statusCode) {
+      print(jsonResponse.body);
+      switch (jsonResponse.statusCode) {
         case 400:
           throw CustomException(
             message: 'User already exists',
-            errorCode: response.statusCode,
+            errorCode: jsonResponse.statusCode,
           );
         case 401:
           throw CustomException(
             message: 'Invalid information',
-            errorCode: response.statusCode,
+            errorCode: jsonResponse.statusCode,
           );
         case 500:
           throw CustomException(
             message: 'Internal server error',
-            errorCode: response.statusCode,
+            errorCode: jsonResponse.statusCode,
           );
         default:
           throw CustomException(
             message: 'Failed to register',
-            errorCode: response.statusCode,
+            errorCode: jsonResponse.statusCode,
           );
       }
     }
