@@ -5,12 +5,12 @@ import 'package:frontend/repositories/api.dart';
 class LoginState extends ChangeNotifier {
   static LoginState? _instance;
   
-  LoginState() {
+  LoginState._() {
     _isLoggedIn = ApiDatasource.instance.jwt != null;
   }
 
   static LoginState get instance {
-    _instance ??= LoginState();
+    _instance ??= LoginState._();
     return _instance!;
   }
 

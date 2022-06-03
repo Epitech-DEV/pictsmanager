@@ -1,7 +1,6 @@
 
 import 'dart:convert';
 
-import 'package:frontend/shared/error.dart';
 import 'package:frontend/repositories/api.dart';
 
 abstract class AuthRepository {
@@ -20,65 +19,26 @@ class AuthApiRepository extends AuthRepository {
 
   @override
   Future<void> register(String username, String password) async {
-    final response = await api.post('/register', body: {
+    final response = await api.post('/auth/register', body: {
       'username': username,
       'password': password,
     });
 
-    if (response.statusCode == 200) {
-      final responseBody = jsonDecode(response.body);
-      String jwt = responseBody['result']['accessToken'];
-      api.setJWT(jwt);
-    } else {
-      late String message;
-      
-      switch (response.statusCode) {
-        case 400:
-          message = 'Invalid username or password';
-          break;
-        default:
-          message = 'Network error';
-          break;
-      }
-
-      throw ApiError(
-        code: response.statusCode,
-        message: message,
-      );
-    }
+    final responseBody = jsonDecode(response.body);
+    String jwt = responseBody['result']['accessToken'];
+    api.setJWT(jwt);
   }
 
   @override
-  Future<void> login(String username, String password) async {
-    final response = await api.post('/register', body: {
+  Future<void> login(String username, String password) async {    
+    final response = await api.post('/auth/login', body: {
       'username': username,
       'password': password,
     });
 
-    if (response.statusCode == 200) {
-      final body = jsonDecode(response.body);
-      String jwt = body['result']['accessToken'];
-      api.setJWT(jwt);
-    } else {
-      late String message;
-      
-      switch (response.statusCode) {
-        case 400:
-          message = 'User already exists';
-          break;
-        case 401:
-          message = 'Invalid information';
-          break;
-        default:
-          message = 'Network error';
-          break;
-      }
-
-      throw ApiError(
-        code: response.statusCode,
-        message: message,
-      );
-    }
+    final body = jsonDecode(response.body);
+    String jwt = body['result']['accessToken'];
+    api.setJWT(jwt);
   }
 
   @override

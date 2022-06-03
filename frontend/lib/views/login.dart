@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:frontend/services/auth.dart';
 import 'package:frontend/shared/error.dart';
 import 'package:frontend/shared/validators.dart';
-import 'package:frontend/views/home.dart';
 import 'package:frontend/views/register.dart';
 
 class LoginView extends StatefulWidget {
@@ -33,10 +32,11 @@ class _LoginViewState extends State<LoginView> {
           usernameController.text,
           passwordController.text,
         );
+
       } on ApiError catch (error) {
         SnackBar snackBar = SnackBar(content: Text(error.message));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      } catch (error) {
+      } on Error catch (_) {
         SnackBar snackBar = const SnackBar(content: Text('Failed to login'));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
@@ -45,6 +45,11 @@ class _LoginViewState extends State<LoginView> {
 
   List<Widget> loginForm() {
     return [
+      Text(
+        'Login',
+        style: Theme.of(context).textTheme.headline3,
+      ),
+      const SizedBox(height: 16),
       TextFormField(
         decoration: const InputDecoration(labelText: "Username"),
         validator: Validators.usernameValidator,
@@ -62,7 +67,11 @@ class _LoginViewState extends State<LoginView> {
         controller: passwordController,
       ),
       const SizedBox(height: 8),
-      ElevatedButton(onPressed: login, child: const Text("Login")),
+      ElevatedButton(onPressed: () {
+          login();
+        }, 
+        child: const Text("Login")
+        ),
       const SizedBox(height: 8),
       ElevatedButton(
         onPressed: () {
