@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/services/albums.dart';
 import 'package:frontend/shared/globals.dart';
+import 'package:frontend/states/library_collection.dart';
 
 class NewAlbumView extends StatefulWidget {
   const NewAlbumView({Key? key}) : super(key: key);
@@ -64,7 +65,18 @@ class _NewAlbumViewState extends State<NewAlbumView> {
                   ),
                   onPressed: _isProcessingForm ? null : () => _onSubmitForm(context),
                   child: _isProcessingForm 
-                    ? Row(children: const [Text('Create'), CircularProgressIndicator()]) 
+                    ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text('Create'), 
+                        SizedBox(width: kSpace),
+                        SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator()
+                        )
+                      ]) 
                     : const Text('Create'),
                 ),
               ],
@@ -87,6 +99,7 @@ class _NewAlbumViewState extends State<NewAlbumView> {
           SnackBar(content: Text('Album "' + value.name + '" created')),
         );
 
+        LibraryCollectionController.instance.reload();
         Navigator.pop(context);
       })
       .catchError((error) {
