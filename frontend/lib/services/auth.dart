@@ -1,6 +1,6 @@
 
-import 'package:frontend/states/login_state.dart';
 import 'package:frontend/repositories/auth.dart';
+import 'package:frontend/states/login_state.dart';
 
 class AuthService {
   static AuthService? _instance;

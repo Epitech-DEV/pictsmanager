@@ -13,14 +13,15 @@ class PictsManagerApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<LoginState>(
-          create: (_) => LoginState(),
+          create: (_) => LoginState.instance,
         ),
         ChangeNotifierProvider<ThemeState>(
-          create: (_) => ThemeState(useDarkTheme: false),
+          create: (_) => ThemeState(useDarkTheme: true),
         ),
       ],
       builder: (context, _) => Consumer2<LoginState, ThemeState>(
         builder: (context, LoginState loginState, themeState, _) => MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: 'PictsManager',
           themeMode: themeState.themeMode,
           theme: ThemeState.lightTheme,

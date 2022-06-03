@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:frontend/shared/error.dart';
 import 'package:http/http.dart' as http;
@@ -6,7 +8,7 @@ class ApiDatasource {
   ApiDatasource._();
 
   // TODO: setup your own API path here
-  static const String _baseUrl = 'https://my_api.com/api';
+  static const String _baseUrl = 'http://10.101.254.6:8080';
 
   static ApiDatasource? _instance;
   static FlutterSecureStorage? _storage;
@@ -18,9 +20,7 @@ class ApiDatasource {
   }
 
   String? jwt;
-  final Map<String, String>? _headers = {
-    'Content-Type': 'application/json',
-  };
+  Map<String, String>? _headers;
 
   void loadJWT() async {
     jwt = await _storage?.read(key: 'jwt');
@@ -41,46 +41,41 @@ class ApiDatasource {
 
   void setAuthHeader(String? jwt) {
     if (jwt != null) {
-      _headers!['Authorization'] = 'Bearer $jwt';
+      _headers ??= {
+        'Authorization': 'Bearer $jwt',
+      };
     } else {
-      _headers!.remove('Authorization');
+      _headers = null;
     }
   }
 
   Future<http.Response> get(String path) async {
     final response = await http.get(Uri.parse('$_baseUrl$path'), headers: _headers);
 
-    if (response.statusCode == 500) {
-      throw ApiError(
-        code: response.statusCode,
-        message: 'Internal server error',
-      );
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw ApiError.fromJson(jsonDecode(response.body)['error']);
     }
 
     return Future.value(response);
   }
 
   Future<http.Response> post(String path, {Map<String, String>? body}) async {
-    final response = await http.post(Uri.parse('$_baseUrl$path'), body: body, headers: _headers);
+    final encodedBody = jsonEncode(body);
+    final response = await http.post(Uri.parse('$_baseUrl$path'), body: encodedBody, headers: _headers);
 
-    if (response.statusCode == 500) {
-      throw ApiError(
-        code: response.statusCode,
-        message: 'Internal server error',
-      );
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw ApiError.fromJson(jsonDecode(response.body)['error']);
     }
 
     return Future.value(response);
   }
 
   Future<http.Response> put(String path, {Map<String, String>? body}) async {
-    final response = await http.put(Uri.parse('$_baseUrl$path'), body: body, headers: _headers);
+    final encodedBody = jsonEncode(body);
+    final response = await http.put(Uri.parse('$_baseUrl$path'), body: encodedBody, headers: _headers);
 
-    if (response.statusCode == 500) {
-      throw ApiError(
-        code: response.statusCode,
-        message: 'Internal server error',
-      );
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw ApiError.fromJson(jsonDecode(response.body)['error']);
     }
 
     return Future.value(response);
@@ -89,11 +84,8 @@ class ApiDatasource {
   Future<http.Response> delete(String path) async {
     final response = await http.delete(Uri.parse('$_baseUrl$path'), headers: _headers);
 
-    if (response.statusCode == 500) {
-      throw ApiError(
-        code: response.statusCode,
-        message: 'Internal server error',
-      );
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw ApiError.fromJson(jsonDecode(response.body)['error']);
     }
 
     return Future.value(response);
@@ -109,7 +101,7 @@ class ApiDatasource {
 
     if (response.statusCode == 500) {
       throw ApiError(
-        code: response.statusCode,
+        statusCode: response.statusCode,
         message: 'Internal server error',
       );
     }
