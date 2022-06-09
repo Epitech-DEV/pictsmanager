@@ -109,6 +109,7 @@ class _ShareViewState extends State<ShareView> with AutomaticKeepAliveClientMixi
         } else if (snapshot.hasError) {
           return Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text('Network Error: fail to fetch albums'),
                 const SizedBox(height: kSpace),
