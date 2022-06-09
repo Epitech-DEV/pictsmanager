@@ -42,6 +42,7 @@ class _LibraryViewState extends State<LibraryView> with AutomaticKeepAliveClient
           } else if (snapshot.hasError) {
             return Center(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text('Network Error: fail to fetch albums'),
                   const SizedBox(height: kSpace),
