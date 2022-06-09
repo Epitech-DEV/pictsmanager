@@ -59,7 +59,7 @@ class ApiDatasource {
     return Future.value(response);
   }
 
-  Future<http.Response> post(String path, {Map<String, String>? body}) async {
+  Future<http.Response> post(String path, {Map<String, dynamic>? body}) async {
     final encodedBody = jsonEncode(body);
     final response = await http.post(Uri.parse('$_baseUrl$path'), body: encodedBody, headers: _headers);
 

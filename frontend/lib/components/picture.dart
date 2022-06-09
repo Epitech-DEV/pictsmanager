@@ -37,7 +37,7 @@ class Picture extends StatelessWidget {
             borderRadius: BorderRadius.circular(5),
           ),
           child: CachedNetworkImage(
-            imageUrl: data.url,
+            imageUrl: data.path,
             fit: BoxFit.cover,
             placeholder: (context, url) => Center(
               child: Container(
