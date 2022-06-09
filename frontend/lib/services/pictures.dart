@@ -45,15 +45,15 @@ class PictureService {
     
     List<PicturesGroupData> groups = [];
     
-    DateTime currentDate = picturesData[0].createdAt;
+    DateTime currentDate = picturesData[0].createdAt!;
     List<PictureData> currentPictures = [];
     
     for (PictureData data in picturesData) {
-      if (dateComparator(data.createdAt, currentDate)) {
+      if (dateComparator(data.createdAt!, currentDate)) {
         currentPictures.add(data);
       } else {
         groups.add(PicturesGroupData(type: type, date: currentDate, pictures: currentPictures));
-        currentDate = data.createdAt;
+        currentDate = data.createdAt!;
         currentPictures = [data];
       }
     }
