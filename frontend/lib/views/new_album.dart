@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/services/albums.dart';
 import 'package:frontend/shared/globals.dart';
+import 'package:frontend/states/library_collection.dart';
 
 class NewAlbumView extends StatefulWidget {
   const NewAlbumView({Key? key}) : super(key: key);
@@ -14,11 +15,17 @@ class NewAlbumView extends StatefulWidget {
 class _NewAlbumViewState extends State<NewAlbumView> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
+  late final AlbumService albumService;
+  bool _isProcessingForm = false;
+
+  @override
+  void initState() {
+    super.initState();
+    albumService = AlbumService.getInstance();
+  }
 
   @override
   Widget build(BuildContext context) {
-    AlbumService albumService = AlbumService.getInstance();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('New Album'),
@@ -56,26 +63,21 @@ class _NewAlbumViewState extends State<NewAlbumView> {
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size.fromHeight(40)
                   ),
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Processing Data')),
-                      );
-                      await albumService.createAlbum(name: _nameController.text)
-                        .then((value) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Album "' + value.name + '" created')),
-                          );
-                          Navigator.pop(context, value);
-                        })
-                        .catchError((error) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(error)),
-                          );
-                        });
-                    }
-                  },
-                  child: const Text('Create'),
+                  onPressed: _isProcessingForm ? null : () => _onSubmitForm(context),
+                  child: _isProcessingForm 
+                    ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text('Create'), 
+                        SizedBox(width: kSpace),
+                        SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator()
+                        )
+                      ]) 
+                    : const Text('Create'),
                 ),
               ],
             ),
@@ -83,5 +85,28 @@ class _NewAlbumViewState extends State<NewAlbumView> {
         ),
       )
     );
+  }
+
+  void _onSubmitForm(BuildContext context) async {
+    setState(() {
+      _isProcessingForm = true;
+    });
+
+    if (_formKey.currentState!.validate()) {
+      await albumService.createAlbum(name: _nameController.text)
+      .then((value) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Album "' + value.name + '" created')),
+        );
+
+        LibraryCollectionController.instance.reload();
+        Navigator.pop(context);
+      })
+      .catchError((error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(error)),
+        );
+      });
+    }
   }
 }

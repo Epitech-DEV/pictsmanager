@@ -11,7 +11,7 @@ class AlbumService {
   });
 
   static AlbumService getInstance() {
-    _albumService ??= AlbumService(albumRepository: AlbumInMemoryRepository());
+    _albumService ??= AlbumService(albumRepository: AlbumApiRepository());
     return _albumService!;
   }
 

@@ -1,8 +1,11 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/views/library.dart';
+import 'package:frontend/views/new_album.dart';
 import 'package:frontend/views/photos.dart';
 import 'package:frontend/views/search.dart';
 import 'package:frontend/views/share.dart';
+import 'package:frontend/views/take_picture.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -14,19 +17,66 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   late PageController _viewController;
   late int _selectedView;
+  late CameraDescription firstCamera;
   late Map<String, Widget> _views;
+  late AppBar _appBar;
+
+  void openCamera() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    final cameras = await availableCameras();
+    firstCamera = cameras.first;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TakePictureScreen(
+          camera: firstCamera,
+        ),
+      ),
+    );
+  }
 
   void _onPageSelected(int index) {
     setState(() {
       _selectedView = index;
       _viewController.jumpToPage(index);
     });
+
+    _appBar = _generateAppBarContent(index);
+  }
+
+  AppBar _generateAppBarContent(int index) {
+    switch (index) {
+      case 1:
+        return _buildAppBar('Search');
+      case 2:
+        return _buildAppBar('Share');
+      case 3:
+        return _buildAppBar(
+          'Library',
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.create_new_folder_outlined),
+              onPressed: () => navigateToAlbumCreationScreen(context),
+            ),
+          ],
+        );
+      default:
+        return _buildAppBar('Photos');
+    }
+  }
+
+  AppBar _buildAppBar(String title, {List<Widget>? actions}) {
+    return AppBar(
+      title: Text(title),
+      actions: actions,
+    );
   }
 
   @override
   void initState() {
     _selectedView = 0;
     _viewController = PageController(initialPage: _selectedView);
+    _appBar = _generateAppBarContent(_selectedView);
     _views = const {
       'Photos': PhotosView(),
       'Search': SearchView(),
@@ -39,13 +89,17 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_views.keys.elementAt(_selectedView)),
-      ),
+      appBar: _appBar,
       body: PageView(
         controller: _viewController,
         physics: const NeverScrollableScrollPhysics(),
         children: _views.values.toList(),
+      ),
+      floatingActionButton: FloatingActionButton(
+        heroTag: 'take-photo',
+        onPressed: openCamera,
+        tooltip: 'Open Camera',
+        child: const Icon(Icons.camera),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -80,6 +134,15 @@ class _HomeViewState extends State<HomeView> {
         ],
         currentIndex: _selectedView,
         onTap: _onPageSelected,
+      ),
+    );
+  }
+
+  void navigateToAlbumCreationScreen(BuildContext context) async{
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const NewAlbumView(),
       ),
     );
   }

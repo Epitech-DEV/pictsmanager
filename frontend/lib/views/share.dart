@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/album.dart';
-import 'package:frontend/components/album_list.dart';
-import 'package:frontend/components/picture_group_list.dart';
 import 'package:frontend/models/album.dart';
 import 'package:frontend/models/picture.dart';
 import 'package:frontend/models/pictures_group.dart';
@@ -111,6 +109,7 @@ class _ShareViewState extends State<ShareView> with AutomaticKeepAliveClientMixi
         } else if (snapshot.hasError) {
           return Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text('Network Error: fail to fetch albums'),
                 const SizedBox(height: kSpace),
