@@ -1,6 +1,7 @@
 
 import 'package:frontend/models/picture.dart';
 import 'package:frontend/models/pictures_group.dart';
+import 'package:frontend/models/search_query.dart';
 import 'package:frontend/repositories/picture.dart';
 import 'package:frontend/shared/date.dart';
 
@@ -23,6 +24,10 @@ class PictureService {
 
   Future<List<PictureData>> getSharedPictures() {
     return pictureRepository.getSharedPictures();
+  }
+
+  Future<List<PictureData>> search(SearchQuery query) {
+    return pictureRepository.search(query);
   }
 
   List<PicturesGroupData> generatePicturesGroups(PictureGroupType type, List<PictureData> picturesData) {

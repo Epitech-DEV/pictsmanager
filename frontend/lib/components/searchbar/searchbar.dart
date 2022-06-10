@@ -4,9 +4,10 @@ import 'advanced_search_dialog.dart';
 import 'search_editing_controller.dart';
 
 class SearchBar extends StatefulWidget {
-  SearchEditingController? searchEditingController;
-  void Function(SearchEditingController? controller)? onSearch;
-  SearchBar({
+  final SearchEditingController? searchEditingController;
+  final Function(SearchEditingController? controller)? onSearch;
+
+  const SearchBar({
     Key? key,
     this.searchEditingController,
     this.onSearch,
