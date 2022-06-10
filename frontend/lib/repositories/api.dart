@@ -8,7 +8,7 @@ class ApiDatasource {
   ApiDatasource._();
 
   // TODO: setup your own API path here
-  static const String _baseUrl = 'http://10.101.254.6:8080';
+  static const String _baseUrl = 'http://10.101.9.1:8080';
 
   static ApiDatasource? _instance;
   static FlutterSecureStorage? _storage;
@@ -50,7 +50,8 @@ class ApiDatasource {
   }
 
   Future<http.Response> get(String path) async {
-    final response = await http.get(Uri.parse('$_baseUrl$path'), headers: _headers);
+    final response =
+        await http.get(Uri.parse('$_baseUrl$path'), headers: _headers);
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw ApiError.fromJson(jsonDecode(response.body)['error']);
@@ -60,8 +61,10 @@ class ApiDatasource {
   }
 
   Future<http.Response> post(String path, {Map<String, String>? body}) async {
+    print(Uri.parse('$_baseUrl$path'));
     final encodedBody = jsonEncode(body);
-    final response = await http.post(Uri.parse('$_baseUrl$path'), body: encodedBody, headers: _headers);
+    final response = await http.post(Uri.parse('$_baseUrl$path'),
+        body: encodedBody, headers: _headers);
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw ApiError.fromJson(jsonDecode(response.body)['error']);
@@ -72,7 +75,8 @@ class ApiDatasource {
 
   Future<http.Response> put(String path, {Map<String, String>? body}) async {
     final encodedBody = jsonEncode(body);
-    final response = await http.put(Uri.parse('$_baseUrl$path'), body: encodedBody, headers: _headers);
+    final response = await http.put(Uri.parse('$_baseUrl$path'),
+        body: encodedBody, headers: _headers);
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw ApiError.fromJson(jsonDecode(response.body)['error']);
@@ -82,7 +86,8 @@ class ApiDatasource {
   }
 
   Future<http.Response> delete(String path) async {
-    final response = await http.delete(Uri.parse('$_baseUrl$path'), headers: _headers);
+    final response =
+        await http.delete(Uri.parse('$_baseUrl$path'), headers: _headers);
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw ApiError.fromJson(jsonDecode(response.body)['error']);
@@ -91,11 +96,14 @@ class ApiDatasource {
     return Future.value(response);
   }
 
-  Future<http.StreamedResponse> multipart(String path, List<http.MultipartFile> parts) async {
+  Future<http.StreamedResponse> multipart(String path,
+      List<http.MultipartFile> parts, Map<String, String> fields) async {
     final uri = Uri.parse('$_baseUrl$path');
 
     final request = http.MultipartRequest('POST', uri);
     request.files.addAll(parts);
+    request.fields.addAll(fields);
+    request.headers.addAll(_headers!);
 
     final response = await request.send();
 

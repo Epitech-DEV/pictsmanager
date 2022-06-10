@@ -53,6 +53,11 @@ void main(List<String> arguments) async {
     constructor: SecurityError.new, // Must be 401
   );
   backend.addError(
+    errorCode: "picture:upload:missing_metadata",
+    message: "Missing metadata",
+    constructor: BadRequestError.new,
+  );
+  backend.addError(
     errorCode: "picture:upload:file",
     message: "File invalid",
     constructor: BadRequestError.new,

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:frontend/views/new_picture_metadata.dart';
 
-
 class DisplayPictureScreen extends StatelessWidget {
   const DisplayPictureScreen({
     Key? key,
@@ -51,7 +50,9 @@ class DisplayPictureScreen extends StatelessWidget {
                     onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const PictureAddTagsAndName(),
+                        builder: (context) => PictureAddTagsAndName(
+                          imagePath: imagePath,
+                        ),
                       ),
                     ),
                     child: const Icon(Icons.cloud_upload),

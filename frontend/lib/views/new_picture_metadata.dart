@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/shared/date.dart';
 import 'package:frontend/views/new_picture_add_album.dart';
+import 'package:intl/intl.dart';
 
 class PictureAddTagsAndName extends StatefulWidget {
-  const PictureAddTagsAndName({Key? key}) : super(key: key);
+  const PictureAddTagsAndName({
+    Key? key,
+    required this.imagePath,
+  }) : super(key: key);
+
+  final String imagePath;
 
   @override
   State<PictureAddTagsAndName> createState() => _PictureAddTagsAndNameState();
@@ -11,7 +18,8 @@ class PictureAddTagsAndName extends StatefulWidget {
 class _PictureAddTagsAndNameState extends State<PictureAddTagsAndName> {
   final _nameController = TextEditingController();
   final _tagController = TextEditingController();
-  List<Chip> tagList = [];
+  List<Chip> chipList = [];
+  List<String> tagList = [];
   String _tagValue = "";
   bool _validate = false;
 
@@ -19,17 +27,19 @@ class _PictureAddTagsAndNameState extends State<PictureAddTagsAndName> {
     if (_tagValue != "") {
       setState(() {
         _validate = false;
-        tagList.add(
+        chipList.add(
           Chip(
             label: Text(_tagValue),
             // deleteIcon: const Icon(Icons.delete),
             onDeleted: () {
               setState(() {
+                chipList.removeAt(chipList.length - 1);
                 tagList.removeAt(tagList.length - 1);
               });
             },
           ),
         );
+        tagList.add(_tagValue);
         _tagController.clear();
         _tagValue = "";
       });
@@ -60,7 +70,6 @@ class _PictureAddTagsAndNameState extends State<PictureAddTagsAndName> {
                       decoration: const InputDecoration(
                         labelText: "Name (defaults to current date)",
                       ),
-                      onChanged: (value) => {setState(() {})},
                       controller: _nameController,
                       keyboardType: TextInputType.name,
                     ),
@@ -89,7 +98,7 @@ class _PictureAddTagsAndNameState extends State<PictureAddTagsAndName> {
                       child: Wrap(
                         direction: Axis.horizontal,
                         spacing: 10,
-                        children: tagList,
+                        children: chipList,
                       ),
                     ),
                   ),
@@ -107,12 +116,23 @@ class _PictureAddTagsAndNameState extends State<PictureAddTagsAndName> {
                         padding: const EdgeInsets.all(16),
                         child: ElevatedButton(
                           child: const Text('Continue'),
-                          onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const PictureAddToAlbum(),
-                            ),
-                          ),
+                          onPressed: () {
+                            if (_nameController.text == "") {
+                              DateTime now = DateTime.now();
+                              DateFormat formatter = DateFormat('yyyy-MM-dd');
+                              _nameController.text = formatter.format(now);
+                            }
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PictureAddToAlbum(
+                                  imagePath: widget.imagePath,
+                                  tagList: tagList,
+                                  name: _nameController.text,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ],

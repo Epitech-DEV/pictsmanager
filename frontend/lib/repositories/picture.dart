@@ -1,17 +1,18 @@
-
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:frontend/models/metadata.dart';
 import 'package:frontend/models/picture.dart';
 import 'package:frontend/repositories/api.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
+import 'package:http_parser/http_parser.dart';
 
 abstract class PictureRepository {
   Future<List<PictureData>> getUserPictures();
   Future<List<PictureData>> getSharedPictures();
-  Future<void> uploadPicture(File imageFile);
+  Future<void> uploadPicture(File imageFile, PictureMetadata metadata);
 }
 
 class PictureApiRepository extends PictureRepository {
@@ -25,24 +26,29 @@ class PictureApiRepository extends PictureRepository {
   Future<List<PictureData>> getUserPictures() {
     throw UnimplementedError();
   }
-  
+
   @override
   Future<List<PictureData>> getSharedPictures() {
     // TODO: implement getSharedPictures
     throw UnimplementedError();
   }
-  
+
   @override
-  Future<void> uploadPicture(File imageFile) async {
+  Future<void> uploadPicture(File imageFile, PictureMetadata metadata) async {
+    debugPrint(imageFile.path);
     var imageStream = http.ByteStream(imageFile.openRead());
     imageStream.cast();
 
     var imageLength = await imageFile.length();
-    var imageMultipartFile = http.MultipartFile('file', imageStream, imageLength,
-        filename: basename(imageFile.path));
-
-    // TODO: implement uploadPicture
-    final response = await api.multipart('auth/login', [imageMultipartFile]);
+    var imageMultipartFile = http.MultipartFile(
+      'file',
+      imageStream,
+      imageLength,
+      filename: metadata.filename,
+      contentType: MediaType('image', 'jpg'),
+    );
+    final response = await api.multipart('/pictures/upload',
+        [imageMultipartFile], {'metadata': jsonEncode(metadata.toJson())});
     debugPrint(response.statusCode.toString());
 
     // listen for response
@@ -309,7 +315,6 @@ class PictureInMemoryRepository extends PictureRepository {
     "Picture 15",
   ];
 
-
   @override
   Future<List<PictureData>> getUserPictures() {
     return Future.delayed(
@@ -317,17 +322,19 @@ class PictureInMemoryRepository extends PictureRepository {
       () => userPictures,
     );
   }
-  
+
   @override
   Future<List<PictureData>> getSharedPictures() {
     return Future.delayed(
       const Duration(seconds: 2),
-      () => userPictures.where((element) => sharedPictures.contains(element.name)).toList(),
+      () => userPictures
+          .where((element) => sharedPictures.contains(element.name))
+          .toList(),
     );
   }
-  
+
   @override
-  Future<void> uploadPicture(File imageFile) {
+  Future<void> uploadPicture(File imageFile, PictureMetadata metadata) {
     return Future.delayed(const Duration(seconds: 2));
   }
 }
