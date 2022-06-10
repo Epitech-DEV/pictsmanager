@@ -108,8 +108,7 @@ class _NewAlbumViewState extends State<NewAlbumView> {
     } on ApiError catch (error) {
       SnackBar snackBar = SnackBar(content: Text("${error.statusCode}: ${error.message}"));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    } on Error catch (error) {
-      print(error);
+    } on Error catch (_) {
       SnackBar snackBar = const SnackBar(content: Text('Failed to create album'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } finally {
