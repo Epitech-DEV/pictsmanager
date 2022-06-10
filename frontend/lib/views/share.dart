@@ -18,14 +18,16 @@ class ShareView extends StatefulWidget {
 }
 
 class _ShareViewState extends State<ShareView> with AutomaticKeepAliveClientMixin {
-  final AlbumService _albumService = AlbumService.getInstance();
-  final PictureService _pictureService = PictureService.getInstance();
+  late final AlbumService _albumService;
+  late final PictureService _pictureService;
 
   late Future<SharedData> _getSharedDataFuture;
 
   @override
   void initState() {
     super.initState();
+    _albumService = AlbumService.instance;
+    _pictureService = PictureService.instance;
     _getSharedDataFuture = _getSharedData();
   }
 

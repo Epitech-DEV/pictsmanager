@@ -36,7 +36,7 @@ class AlbumApiRepository extends AlbumRepository {
   Future<AlbumData> createAlbum(String name) async {
     final newAlbum = AlbumData(name: name);
     final response = await api.post('/albums', body: newAlbum.toJson());
-    return AlbumData.fromJson(jsonDecode(response.body));
+    return AlbumData.fromJson(jsonDecode(response.body)["result"]);
   }
   
   @override

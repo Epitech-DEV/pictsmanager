@@ -10,7 +10,7 @@ class AlbumService {
     required this.albumRepository
   });
 
-  static AlbumService getInstance() {
+  static AlbumService get instance {
     _albumService ??= AlbumService(albumRepository: AlbumApiRepository());
     return _albumService!;
   }
@@ -25,5 +25,9 @@ class AlbumService {
 
   Future<List<AlbumData>> getSharedAlbums() async {
     return albumRepository.getSharedAlbums();
+  }
+
+  Future<void> delete(String id) async {
+    return albumRepository.deleteAlbum(id);
   }
 }
