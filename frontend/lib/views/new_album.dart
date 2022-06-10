@@ -1,7 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:frontend/models/album.dart';
 import 'package:frontend/services/albums.dart';
+import 'package:frontend/shared/error.dart';
 import 'package:frontend/shared/globals.dart';
 import 'package:frontend/states/library_collection.dart';
 
@@ -21,7 +23,7 @@ class _NewAlbumViewState extends State<NewAlbumView> {
   @override
   void initState() {
     super.initState();
-    albumService = AlbumService.getInstance();
+    albumService = AlbumService.instance;
   }
 
   @override
@@ -92,20 +94,26 @@ class _NewAlbumViewState extends State<NewAlbumView> {
       _isProcessingForm = true;
     });
 
-    if (_formKey.currentState!.validate()) {
-      await albumService.createAlbum(name: _nameController.text)
-      .then((value) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Album "' + value.name + '" created')),
-        );
+    if (!_formKey.currentState!.validate()) return;
 
-        LibraryCollectionController.instance.reload();
-        Navigator.pop(context);
-      })
-      .catchError((error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(error)),
-        );
+    try {
+      AlbumData value = await albumService.createAlbum(name: _nameController.text);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Album "' + value.name + '" created')),
+      );
+
+      LibraryCollectionController.instance.reload();
+      Navigator.pop(context);
+    } on ApiError catch (error) {
+      SnackBar snackBar = SnackBar(content: Text("${error.statusCode}: ${error.message}"));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } on Error catch (_) {
+      SnackBar snackBar = const SnackBar(content: Text('Failed to create album'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } finally {
+      setState(() {
+        _isProcessingForm = false;
       });
     }
   }

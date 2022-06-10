@@ -25,7 +25,7 @@ class _PictureGroupListState extends State<PictureGroupList> {
   
   @override
   void initState() {
-    _pictureService = PictureService.getInstance();
+    _pictureService = PictureService.instance;
     pictureGroups = _pictureService.generatePicturesGroups(PictureGroupType.day, widget.data);
     super.initState();
   }

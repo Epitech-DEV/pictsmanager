@@ -18,7 +18,7 @@ class _PhotosViewState extends State<PhotosView> with AutomaticKeepAliveClientMi
   @override
   void initState() {
     super.initState();
-    _pictureService = PictureService.getInstance();
+    _pictureService = PictureService.instance;
     _getUserPicturesFuture = _pictureService.getUserPictures();
   }
 

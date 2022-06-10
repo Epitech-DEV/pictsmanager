@@ -9,12 +9,12 @@ typedef DateComparator = bool Function(DateTime dateTime1, DateTime dateTime2);
 class PictureService {
   PictureService({required this.pictureRepository});
 
-  static PictureService? _pictureService;
+  static PictureService? _instance;
   final PictureRepository pictureRepository;
 
-  static PictureService getInstance() {
-    _pictureService ??= PictureService(pictureRepository: PictureApiRepository());
-    return _pictureService!;
+  static PictureService get instance {
+    _instance ??= PictureService(pictureRepository: PictureApiRepository());
+    return _instance!;
   }
 
   Future<List<PictureData>> getUserPictures() {
@@ -60,5 +60,9 @@ class PictureService {
     
     groups.add(PicturesGroupData(type: type, date: currentDate, pictures: currentPictures));
     return groups;
+  }
+
+  Future<void> deletePicture(String pictureId) {
+    return pictureRepository.deletePicture(pictureId);
   }
 }

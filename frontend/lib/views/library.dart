@@ -13,7 +13,7 @@ class LibraryView extends StatefulWidget {
 }
 
 class _LibraryViewState extends State<LibraryView> with AutomaticKeepAliveClientMixin {
-  final AlbumService albumService = AlbumService.getInstance();
+  final AlbumService albumService = AlbumService.instance;
   late LibraryCollectionController _libraryCollectionController;
 
   @override
