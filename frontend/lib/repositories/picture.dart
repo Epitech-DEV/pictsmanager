@@ -450,7 +450,27 @@ class PictureInMemoryRepository extends PictureRepository {
   
   @override
   Future<List<PictureData>> search(SearchQuery query) {
-    // TODO: implement search
-    throw UnimplementedError();
+    List<PictureData> result = userPictures;
+
+    if (query.name != null) {
+      result = result.where((element) => element.name.toLowerCase().contains(query.name!.toLowerCase())).toList();
+    }
+
+    if (query.tags != null) {
+      result = result.where((element) => query.tags!.any((tag) => element.tags.contains(tag))).toList();
+    }
+
+    if (query.begin != null) {
+      result = result.where((element) => element.createdAt!.isAfter(query.begin!)).toList();
+    }
+
+    if (query.end != null) {
+      result = result.where((element) => element.createdAt!.isBefore(query.end!)).toList();
+    }
+
+    return Future.delayed(
+      const Duration(seconds: 2),
+      () => result,
+    );
   }
 }
