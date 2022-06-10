@@ -439,7 +439,17 @@ class PictureInMemoryRepository extends PictureRepository {
   
   @override
   Future<void> uploadPicture(File imageFile) {
-    return Future.delayed(const Duration(seconds: 2));
+    return Future.delayed(
+      const Duration(seconds: 2),
+      () => userPictures.add(PictureData(
+        id: "${userPictures.length + 1}",
+        owner: "1",
+        name: 'Picture ${userPictures.length + 1}',
+        path: 'https://picsum.photos/id/11/760/380',
+        tags: ['tag1', 'tag2'],
+        createdAt: DateTime.now(),
+      )),
+    );
   }
 
   @override
