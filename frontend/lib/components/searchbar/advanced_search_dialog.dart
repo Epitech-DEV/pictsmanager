@@ -5,9 +5,9 @@ import 'search_editing_controller.dart';
 import 'tags_field.dart';
 
 class AdvancedSearchDialog extends StatelessWidget {
-  SearchEditingController searchEditingController;
+  final SearchEditingController searchEditingController;
 
-  AdvancedSearchDialog({
+  const AdvancedSearchDialog({
     Key? key,
     required this.searchEditingController,
   }) : super(key: key);

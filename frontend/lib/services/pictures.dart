@@ -14,7 +14,7 @@ class PictureService {
   final PictureRepository pictureRepository;
 
   static PictureService get instance {
-    _instance ??= PictureService(pictureRepository: PictureApiRepository());
+    _instance ??= PictureService(pictureRepository: PictureInMemoryRepository());
     return _instance!;
   }
 
