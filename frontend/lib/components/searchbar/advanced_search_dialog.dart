@@ -71,9 +71,10 @@ class AdvancedSearchDialog extends StatelessWidget {
                         const SizedBox(height: 8),
                       if (searchEditingController.useDateRange.value)
                         DateField(
-                            dateController:
-                                searchEditingController.toDateController,
-                            text: 'To'),
+                          dateController:
+                              searchEditingController.toDateController,
+                          text: 'To',
+                        ),
                     ],
                   );
                 },
@@ -83,6 +84,5 @@ class AdvancedSearchDialog extends StatelessWidget {
         ),
       ),
     );
-    ;
   }
 }
