@@ -76,7 +76,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "9ba01dc0a7b9b92fe0165a50d1600867567c28c0"
+      resolved-ref: "6c8d33a0cd8d9188f3516bdc307a89be08c47ff8"
       url: "https://github.com/Shiranuit/Cobalt.git"
     source: git
     version: "1.0.0"
@@ -93,7 +93,7 @@ packages:
       name: convert
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.1"
+    version: "3.0.2"
   coverage:
     dependency: transitive
     description:

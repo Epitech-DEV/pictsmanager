@@ -52,8 +52,10 @@ class _ShareViewState extends State<ShareView> with AutomaticKeepAliveClientMixi
           final List<PictureData> pictures = snapshot.data!.pictures;
           final pictureGroups = _pictureService.generatePicturesGroups(PictureGroupType.day, pictures);
 
-          return CustomScrollView(
-            slivers: [
+          List<Widget> slivers = <Widget>[];
+          
+          if (albums.isNotEmpty) {
+            slivers.addAll([
               SliverPadding(
                 padding: const EdgeInsets.all(kSpace * 2),
                 sliver: SliverToBoxAdapter(
@@ -82,12 +84,17 @@ class _ShareViewState extends State<ShareView> with AutomaticKeepAliveClientMixi
                   ),
                 ),
               ),
+            ]);
+          }
+
+          if (pictures.isNotEmpty) {
+            slivers.addAll([
               SliverPadding(
                 padding: const EdgeInsets.all(kSpace * 2),
                 sliver: SliverToBoxAdapter(
                   child: Text(
                     'Pictures',
-                    style: Theme.of(context).textTheme.headline4,
+                    style: Theme.of(context).textTheme.headline5,
                   ),
                 ),
               ),
@@ -106,7 +113,27 @@ class _ShareViewState extends State<ShareView> with AutomaticKeepAliveClientMixi
                   childCount: pictureGroups.length,
                 ),
               ),
-            ],
+            ]);
+          }
+
+          if (albums.isEmpty && pictures.isEmpty) {
+            slivers.add(
+              SliverPadding(
+                padding: const EdgeInsets.all(kSpace * 2),
+                sliver: SliverToBoxAdapter(
+                  child: Center(
+                    child: Text(
+                      'No shared albums or pictures',
+                      style: Theme.of(context).textTheme.headline4,
+                    ),
+                  ),
+                ),
+              )
+            );
+          }
+
+          return CustomScrollView(
+            slivers: slivers,
           );
         } else if (snapshot.hasError) {
           return Center(

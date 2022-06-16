@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:frontend/components/searchbar/number_extension.dart';
 
 class DateEditingController extends ChangeNotifier {
-  DateTime _start = DateTime.now();
+  DateTime? _start;
   TextEditingController controller = TextEditingController();
 
   void setDate(DateTime value) {
     _start = value;
     controller.text =
-        '${_start.day.padLeft(2)}/${_start.month.padLeft(2)}/${_start.year.padLeft(4)}';
+        '${_start!.day.padLeft(2)}/${_start!.month.padLeft(2)}/${_start!.year.padLeft(4)}';
     controller.notifyListeners();
     notifyListeners();
   }
 
-  DateTime get date => _start;
+  DateTime? get date => _start;
 
   @override
   void dispose() {

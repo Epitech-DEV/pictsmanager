@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:frontend/models/picture.dart';
+import 'package:frontend/models/search_query.dart';
 import 'package:frontend/repositories/api.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
@@ -11,6 +12,7 @@ import 'package:path/path.dart';
 abstract class PictureRepository {
   Future<List<PictureData>> getUserPictures();
   Future<List<PictureData>> getSharedPictures();
+  Future<List<PictureData>> search(SearchQuery query);
   Future<void> uploadPicture(File imageFile);
   Future<void> deletePicture(String pictureId);
 }
@@ -68,6 +70,16 @@ class PictureApiRepository extends PictureRepository {
   @override
   Future<void> deletePicture(String pictureId) async {
     await api.delete('/pictures/$pictureId');
+  }
+  
+  @override
+  Future<List<PictureData>> search(SearchQuery query) async {
+    final response = await api.post('/pictures/search', body: query.toJson());
+
+    final body = jsonDecode(response.body);
+    return (body['result'] as List)
+      .map((picture) => PictureData.fromJson(picture))
+      .toList();
   }
 }
 
@@ -427,12 +439,27 @@ class PictureInMemoryRepository extends PictureRepository {
   
   @override
   Future<void> uploadPicture(File imageFile) {
-    return Future.delayed(const Duration(seconds: 2));
+    return Future.delayed(
+      const Duration(seconds: 2),
+      () => userPictures.add(PictureData(
+        id: "${userPictures.length + 1}",
+        owner: "1",
+        name: 'Picture ${userPictures.length + 1}',
+        path: 'https://picsum.photos/id/11/760/380',
+        tags: ['tag1', 'tag2'],
+        createdAt: DateTime.now(),
+      )),
+    );
   }
 
   @override
   Future<void> deletePicture(String pictureId) {
     userPictures.removeWhere((element) => element.id == pictureId);
     return Future.delayed(const Duration(seconds: 2));
+  }
+  
+  @override
+  Future<List<PictureData>> search(SearchQuery query) {
+    throw UnimplementedError();
   }
 }
