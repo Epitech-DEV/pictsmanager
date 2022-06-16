@@ -14,12 +14,14 @@ class ThemeState extends ChangeNotifier with Diagnosticable {
 
   static ThemeData get lightTheme => ThemeData.light().copyWith(
     inputDecorationTheme: kInputDecorationTheme,
-    elevatedButtonTheme: elevatedButtonThemeData
+    elevatedButtonTheme: elevatedButtonThemeData,
+    outlinedButtonTheme: outlinedButtonThemeData,
   );
 
   static ThemeData get darkTheme => ThemeData.dark().copyWith(
     inputDecorationTheme: kInputDecorationTheme,
-    elevatedButtonTheme: elevatedButtonThemeData
+    elevatedButtonTheme: elevatedButtonThemeData,
+    outlinedButtonTheme: outlinedButtonThemeData,
   );
 
   @override

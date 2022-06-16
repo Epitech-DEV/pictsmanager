@@ -7,6 +7,7 @@ import 'package:frontend/components/searchbar/searchbar.dart';
 import 'package:frontend/models/picture.dart';
 import 'package:frontend/models/search_query.dart';
 import 'package:frontend/services/pictures.dart';
+import 'package:frontend/shared/globals.dart';
 
 class SearchView extends StatefulWidget {
   const SearchView({Key? key}) : super(key: key);
@@ -27,7 +28,7 @@ class _SearchViewState extends State<SearchView> with AutomaticKeepAliveClientMi
     _searchEditingController = SearchEditingController();
   }
 
-  Future<void> onSearchIsPerformed(SearchEditingController? controller) async {
+  Future<void> onSearchIsPerformed(SearchEditingController? controller, bool advancedSearch) async {
     if (controller == null) {
       return;
     }
@@ -39,6 +40,7 @@ class _SearchViewState extends State<SearchView> with AutomaticKeepAliveClientMi
       name: controller.keywordController.text,
       begin: controller.fromDateController.date,
       end: controller.toDateController.date,
+      useDateRange: controller.useDateRange.value,
     );
      
     final response = await _pictureService.search(query);
@@ -51,9 +53,12 @@ class _SearchViewState extends State<SearchView> with AutomaticKeepAliveClientMi
 
     return Column(
       children: [
-        SearchBar(
-          searchEditingController: _searchEditingController,
-          onSearch: (searchController) => onSearchIsPerformed(searchController),
+        Padding(
+          padding: const EdgeInsets.all(kSpace),
+          child: SearchBar(
+            searchEditingController: _searchEditingController,
+            onSearch: onSearchIsPerformed,
+          ),
         ),
         Expanded(
           child: StreamBuilder<List<PictureData>?>(

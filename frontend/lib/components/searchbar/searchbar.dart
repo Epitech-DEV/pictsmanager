@@ -5,7 +5,7 @@ import 'search_editing_controller.dart';
 
 class SearchBar extends StatefulWidget {
   final SearchEditingController? searchEditingController;
-  final Function(SearchEditingController? controller)? onSearch;
+  final Function(SearchEditingController? controller, bool advancedSearch)? onSearch;
 
   const SearchBar({
     Key? key,
@@ -42,7 +42,7 @@ class _SearchBarState extends State<SearchBar> {
                   if (widget.searchEditingController != null) {
                     widget.searchEditingController!.copyFrom(controller);
                   }
-                  widget.onSearch?.call(widget.searchEditingController);
+                  widget.onSearch?.call(widget.searchEditingController, true);
                   Navigator.pop(context);
                 },
               ),
@@ -67,7 +67,7 @@ class _SearchBarState extends State<SearchBar> {
         ),
       ),
       onSubmitted: (String submitted) {
-        widget.onSearch?.call(widget.searchEditingController);
+        widget.onSearch?.call(widget.searchEditingController, false);
       },
     );
   }
