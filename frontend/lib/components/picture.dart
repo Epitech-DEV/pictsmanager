@@ -1,7 +1,4 @@
-import 'dart:async';
 import 'dart:typed_data';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/picture.dart';
 import 'package:frontend/utils/http_stream_downloader.dart';

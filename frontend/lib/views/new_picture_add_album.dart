@@ -48,6 +48,7 @@ class _PictureAddToAlbumState extends State<PictureAddToAlbum> {
             if (snapshot.hasData) {
               if (checkboxSelectedAlbums.isEmpty) {
                 for (AlbumData album in snapshot.data!) {
+                  album = album;
                   checkboxSelectedAlbums.add(false);
                 }
               }
