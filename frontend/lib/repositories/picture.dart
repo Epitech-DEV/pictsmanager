@@ -7,7 +7,6 @@ import 'package:frontend/models/picture.dart';
 import 'package:frontend/models/search_query.dart';
 import 'package:frontend/repositories/api.dart';
 import 'package:http/http.dart' as http;
-import 'package:path/path.dart';
 import 'package:http_parser/http_parser.dart';
 
 abstract class PictureRepository {

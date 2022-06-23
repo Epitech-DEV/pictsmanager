@@ -1,6 +1,4 @@
 import 'dart:typed_data';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/delete_dialog_box.dart';
 import 'package:frontend/models/picture.dart';

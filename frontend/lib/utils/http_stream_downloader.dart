@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:http/http.dart' as http;
 
@@ -9,8 +8,7 @@ class HttpStreamDownloader {
 
   HttpStreamDownloader(this.response);
 
-
- static int find(List<int> boundary, int start, List<int> content) {
+  static int find(List<int> boundary, int start, List<int> content) {
     int strIndex = 0;
     int index = start;
     while (index < content.length) {
@@ -45,7 +43,7 @@ class HttpStreamDownloader {
       }
       start = stop + 2;
       chunks.add(chunk.sublist(start, start + len));
-      
+
       start = start + len + 2;
       stop = find('\r\n'.codeUnits, start, chunk);
     }
@@ -74,7 +72,7 @@ class HttpStreamDownloader {
       }, onError: (error) {
         completer.completeError(error);
       });
-     });
+    });
     return completer.future;
   }
 }

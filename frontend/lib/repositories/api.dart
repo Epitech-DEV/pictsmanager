@@ -7,7 +7,6 @@ import 'package:http/http.dart' as http;
 class ApiDatasource {
   ApiDatasource._();
 
-  // TODO: setup your own API path here
   static const String _baseUrl = 'http://10.101.9.1:8080';
 
   static ApiDatasource? _instance;
@@ -65,13 +64,9 @@ class ApiDatasource {
     final response = await http.post(Uri.parse('$_baseUrl$path'),
         body: encodedBody, headers: _headers);
 
-    print("1");
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      print("2");
-      print(response.body);
       throw ApiError.fromJson(jsonDecode(response.body)['error']);
     }
-    print("3");
 
     return Future.value(response);
   }
@@ -89,7 +84,6 @@ class ApiDatasource {
   }
 
   Future<http.Response> delete(String path) async {
-    print(path);
     final response =
         await http.delete(Uri.parse('$_baseUrl$path'), headers: _headers);
 

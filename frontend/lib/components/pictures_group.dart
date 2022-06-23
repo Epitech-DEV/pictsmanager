@@ -23,7 +23,6 @@ class PicturesGroup extends StatefulWidget {
 class _PicturesGroupState extends State<PicturesGroup> {
   @override
   void initState() {
-    print(widget.data.date);
     super.initState();
   }
 

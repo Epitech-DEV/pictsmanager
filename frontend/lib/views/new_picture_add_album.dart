@@ -1,13 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/components/album_list.dart';
 import 'package:frontend/components/selectable_album_list.dart';
 import 'package:frontend/models/album.dart';
 import 'package:frontend/models/metadata.dart';
 import 'package:frontend/repositories/picture.dart';
 import 'package:frontend/services/albums.dart';
-import 'package:frontend/shared/date.dart';
 import 'package:frontend/shared/globals.dart';
 import 'package:frontend/views/home.dart';
 
