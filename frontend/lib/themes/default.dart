@@ -14,4 +14,15 @@ final elevatedButtonThemeData = ElevatedButtonThemeData(
   ),
 );
 
+final outlinedButtonThemeData = OutlinedButtonThemeData(
+  style: ButtonStyle(
+    shape: MaterialStateProperty.resolveWith<RoundedRectangleBorder>(
+      (states) => RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5.0),
+      ),
+    ),
+    padding: MaterialStateProperty.resolveWith((states) => const EdgeInsets.all(20.0))
+  ),
+);
+
 const kInputDecorationTheme = InputDecorationTheme(border: OutlineInputBorder());

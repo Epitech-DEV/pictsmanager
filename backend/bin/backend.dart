@@ -1,9 +1,9 @@
+import 'package:backend/config/mongo.dart';
 import 'package:backend/controllers/albums.dart';
 import 'package:backend/controllers/auth.dart';
 import 'package:backend/controllers/pictures.dart';
 import 'package:backend/services/albums.dart';
 import 'package:backend/services/auth.dart';
-import 'package:backend/config/mongo.dart';
 import 'package:backend/services/jwt.dart';
 import 'package:backend/services/pictures.dart';
 import 'package:cobalt/backend.dart';
@@ -67,6 +67,11 @@ void main(List<String> arguments) async {
     message: "File not found",
     constructor: BadRequestError.new,
   );
+
+  backend.onPipe<AfterRequestProcessingEvent>((event) {
+    //event.request.response.addHeader("Access-Control-Allow-Origin", "*");
+    return event;
+  });
 
   /// Start server
   backend.start();

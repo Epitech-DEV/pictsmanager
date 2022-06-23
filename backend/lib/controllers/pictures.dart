@@ -86,15 +86,15 @@ class PicturesController with BackendControllerMixin {
     return {};
   }
 
-  @Get(path: '/search')
+  @Post(path: '/search')
   Future<List<Map>> search(BackendRequest request) async {
     JWTService jwtService = backend.getService<JWTService>()!;
     String owner = jwtService.verify(request)["id"];
 
-    String? tags = request.get(ParamsType.query, "tags");
-    String? name = request.get(ParamsType.query, "name");
-    String? begin = request.get(ParamsType.query, "begin");
-    String? end = request.get(ParamsType.query, "end");
+    String? tags = request.get(ParamsType.body, "tags");
+    String? name = request.get(ParamsType.body, "name");
+    String? begin = request.get(ParamsType.body, "begin");
+    String? end = request.get(ParamsType.body, "end");
 
     List<String>? tagsSplitted;
     DateTime? beginDate;

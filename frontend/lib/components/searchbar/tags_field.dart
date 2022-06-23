@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'tags_editing_controller.dart';
 
 class TagsField extends StatefulWidget {
-  TagsEditingController? tagsController;
-  TagsField({
+  final TagsEditingController? tagsController;
+  
+  const TagsField({
     Key? key,
     this.tagsController,
   }) : super(key: key);

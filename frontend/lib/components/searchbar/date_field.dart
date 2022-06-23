@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 import 'date_editing_controller.dart';
 
 class DateField extends StatefulWidget {
-  DateEditingController? dateController;
-  String text;
-  DateField({Key? key, this.dateController, this.text = 'Date'})
-      : super(key: key);
+  final DateEditingController? dateController;
+  final String text;
+  
+  const DateField({
+    Key? key, 
+    this.dateController, 
+    this.text = 'Date'
+  }) : super(key: key);
 
   @override
   State<DateField> createState() => _DateFieldState();

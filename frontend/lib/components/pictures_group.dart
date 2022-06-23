@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/models/pictures_group.dart';
 import 'package:frontend/components/picture.dart';
+import 'package:frontend/models/pictures_group.dart';
 import 'package:frontend/shared/date.dart';
 import 'package:frontend/shared/globals.dart';
 
@@ -29,11 +29,14 @@ class _PicturesGroupState extends State<PicturesGroup> {
 
   @override
   Widget build(BuildContext context) {
-    final bool displayDay = widget.data.type == PictureGroupType.day;
+    final bool displayDay = widget.data.type == PictureGroupType.day ||
+        widget.data.date.day != DateTime.now().day;
     final bool displayMonth = widget.data.type == PictureGroupType.month ||
-        (displayDay && widget.monthHasChanged);
+        (displayDay && widget.monthHasChanged) ||
+        widget.data.date.month != DateTime.now().month;
     final bool displayYear = widget.data.type == PictureGroupType.year ||
-        (displayMonth && widget.yearHasChanged);
+        (displayMonth && widget.yearHasChanged) ||
+        widget.data.date.year != DateTime.now().year;
 
     return Padding(
       padding:

@@ -76,7 +76,11 @@ packages:
     description:
       path: "."
       ref: master
+<<<<<<< HEAD
       resolved-ref: "95899ba2bfeb573f138e4b47c91fc08405387454"
+=======
+      resolved-ref: "6c8d33a0cd8d9188f3516bdc307a89be08c47ff8"
+>>>>>>> master
       url: "https://github.com/Shiranuit/Cobalt.git"
     source: git
     version: "1.0.0"
