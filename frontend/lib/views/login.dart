@@ -32,14 +32,19 @@ class _LoginViewState extends State<LoginView> {
           usernameController.text,
           passwordController.text,
         );
-
       } on ApiError catch (error) {
         SnackBar snackBar = SnackBar(content: Text(error.message));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       } on Error catch (_) {
         SnackBar snackBar = const SnackBar(content: Text('Failed to login'));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      } catch (e) {
+        SnackBar snackBar = const SnackBar(content: Text('No connecion available'));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
+    } else {
+      SnackBar snackBar = const SnackBar(content: Text('Invalid username or password format. Please enter valid data!'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 

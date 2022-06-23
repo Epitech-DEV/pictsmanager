@@ -27,12 +27,12 @@ class AlbumService {
     return albumRepository.getSharedAlbums();
   }
 
-  Future<void> shareAlbum(String username) {
-    return albumRepository.shareAlbum(username);
+  Future<void> shareAlbum(String albumId, String username) {
+    return albumRepository.shareAlbum(albumId, username);
   }
 
-  Future<void> unshareAlbum(String username) {
-    return albumRepository.unshareAlbum(username);
+  Future<void> unshareAlbum(String albumId, String username) {
+    return albumRepository.unshareAlbum(albumId, username);
   }
 
   Future<void> delete(String id) async {

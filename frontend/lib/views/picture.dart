@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:frontend/components/delete_dialog_box.dart';
 import 'package:frontend/components/username_dialog_box.dart';
@@ -110,7 +111,7 @@ class _PictureViewState extends State<PictureView> {
 
   Future<bool> onShare(String username) async {
     try {
-      await _pictureService.sharePicture(username);
+      await _pictureService.sharePicture(widget.data.id!, username);
       return true;
     } on ApiError catch (error) {
       SnackBar snackBar = SnackBar(content: Text("${error.statusCode}: ${error.message}"));
@@ -125,7 +126,7 @@ class _PictureViewState extends State<PictureView> {
 
   Future<bool> onUnshare(String username) async {
     try {
-      await _pictureService.unsharePicture(username);
+      await _pictureService.unsharePicture(widget.data.id!, username);
       return true;
     } on ApiError catch (error) {
       SnackBar snackBar = SnackBar(content: Text("${error.statusCode}: ${error.message}"));

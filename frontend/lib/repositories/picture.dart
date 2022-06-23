@@ -14,8 +14,8 @@ abstract class PictureRepository {
   Future<List<PictureData>> getSharedPictures();
   Future<void> uploadPicture(File imageFile, PictureMetadata metadata);
   Future<List<PictureData>> search(SearchQuery query);
-  Future<void> sharePicture(String username);
-  Future<void> unsharePicture(String username);
+  Future<void> sharePicture(String pictureId, String username);
+  Future<void> unsharePicture(String pictureId, String username);
   Future<void> deletePicture(String pictureId);
 }
 
@@ -98,13 +98,13 @@ class PictureApiRepository extends PictureRepository {
   }
   
   @override
-  Future<void> sharePicture(String username) async {
-    await api.post('/pictures/share', body: { 'username': username });
+  Future<void> sharePicture(String pictureId, String username) async {
+    await api.post('/pictures/share', body: { 'pictures': [pictureId], 'users': [username] });
   }
   
   @override
-  Future<void> unsharePicture(String username) async {
-    await api.post('/pictures/unshare', body: { 'username': username});
+  Future<void> unsharePicture(String pictureId, String username) async {
+    await api.post('/pictures/unshare', body: { 'pictures': [pictureId], 'users': [username]  });
   }
 }
 
@@ -490,13 +490,13 @@ class PictureInMemoryRepository extends PictureRepository {
   }
   
   @override
-  Future<void> sharePicture(String username) {
+  Future<void> sharePicture(String pictureId, String username) {
     // TODO: implement sharePicture
     throw UnimplementedError();
   }
   
   @override
-  Future<void> unsharePicture(String username) {
+  Future<void> unsharePicture(String pictureId, String username) {
     // TODO: implement unsharePicture
     throw UnimplementedError();
   }

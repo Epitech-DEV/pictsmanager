@@ -30,12 +30,12 @@ class PictureService {
     return pictureRepository.search(query);
   }
 
-  Future<void> sharePicture(String username) {
-    return pictureRepository.sharePicture(username);
+  Future<void> sharePicture(String pictureId, String username) {
+    return pictureRepository.sharePicture(pictureId, username);
   }
 
-  Future<void> unsharePicture(String username) {
-    return pictureRepository.unsharePicture(username);
+  Future<void> unsharePicture(String pictureId, String username) {
+    return pictureRepository.unsharePicture(pictureId, username);
   }
 
   List<PicturesGroupData> generatePicturesGroups(PictureGroupType type, List<PictureData> picturesData) {

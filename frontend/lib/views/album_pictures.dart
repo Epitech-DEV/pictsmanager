@@ -103,7 +103,7 @@ class _AlbumPicturesViewState extends State<AlbumPicturesView> {
 
   Future<bool> onShare(String username) async {
     try {
-      await _albumService.shareAlbum(username);
+      await _albumService.shareAlbum(widget.album.id!, username);
       return true;
     } on ApiError catch (error) {
       SnackBar snackBar = SnackBar(content: Text("${error.statusCode}: ${error.message}"));
@@ -118,7 +118,7 @@ class _AlbumPicturesViewState extends State<AlbumPicturesView> {
 
   Future<bool> onUnshare(String username) async {
     try {
-      await _albumService.unshareAlbum(username);
+      await _albumService.unshareAlbum(widget.album.id!, username);
       return true;
     } on ApiError catch (error) {
       SnackBar snackBar = SnackBar(content: Text("${error.statusCode}: ${error.message}"));

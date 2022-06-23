@@ -56,12 +56,12 @@ class _UsernameDialogBoxState extends State<UsernameDialogBox> {
           },
           child: _isProcessing ?
             Text(
-              'Delete', 
+              'Share', 
               style: TextStyle(
                 color: Theme.of(context).disabledColor, 
                 fontWeight: FontWeight.bold
               )
-            ) : const Text('Delete', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+            ) : Text('Share', style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontWeight: FontWeight.bold)),
         ),
       ],
     );
