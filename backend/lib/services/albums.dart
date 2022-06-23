@@ -7,6 +7,79 @@ import 'package:mongo_dart/mongo_dart.dart';
 class AlbumsService with BackendServiceMixin {
   DbCollection albumsCollection = Mongo.db.collection('albums');
   DbCollection picturesCollection = Mongo.db.collection('pictures');
+  DbCollection usersCollection = Mongo.db.collection('users');
+
+  Future<List<Map>> getShared(String owner) async {
+    List<Map> albums = await albumsCollection
+        .find(where
+            .eq("shared", ObjectId.parse(owner))
+            .sortBy("createdAt", descending: true))
+        .map(
+      (body) {
+        Album album = Album.fromJson(body);
+        return album.toJson();
+      },
+    ).toList();
+
+    /// Populate Pictures
+    for (int i = 0; i < albums.length; i++) {
+      albums[i]["pictures"] = await _populate(albums[i]);
+    }
+    return albums;
+  }
+
+  Future<List<ObjectId>> _fetchUserIds(List<String> usernames) async {
+    final List<Map> usersFetched = await usersCollection
+        .find(
+          where.oneFrom("username", usernames),
+        )
+        .toList();
+    final List<ObjectId> userIds = usersFetched
+        .map(
+          (e) => e["_id"] as ObjectId,
+        )
+        .toList();
+    return userIds;
+  }
+
+  Future<void> addPermissions(
+    String owner,
+    List<String> albums,
+    List<String> users,
+  ) async {
+    final List<ObjectId> albumsIds =
+        albums.map((id) => ObjectId.parse(id)).toList();
+
+    /// Since the Front doesnt send the Ids, we have retieve them.
+    final List<ObjectId> userIds = await _fetchUserIds(users);
+    await albumsCollection.updateMany(
+      where.eq("owner", ObjectId.parse(owner)).oneFrom("_id", albumsIds),
+      {
+        "\$push": {
+          "shared": {"\$each": userIds}
+        },
+      },
+    );
+  }
+
+  Future<void> removePermissions(
+    String owner,
+    List<String> albums,
+    List<String> users,
+  ) async {
+    final List<ObjectId> albumsIds =
+        albums.map((id) => ObjectId.parse(id)).toList();
+    final List<ObjectId> userIds = await _fetchUserIds(users);
+
+    await albumsCollection.updateMany(
+      where.eq("owner", ObjectId.parse(owner)).oneFrom("_id", albumsIds),
+      {
+        "\$pull": {
+          "shared": {"\$in": userIds}
+        },
+      },
+    );
+  }
 
   Future<Album> create(String owner, String name) async {
     Album album = Album(
@@ -55,18 +128,24 @@ class AlbumsService with BackendServiceMixin {
 
     /// Populate Pictures
     for (int i = 0; i < albums.length; i++) {
-      /// Converting to ObjectIds
-      final List<ObjectId> ids = List<String>.from(albums[i]["pictures"])
-          .map((id) => ObjectId.parse(id))
-          .toList();
-
-      final fetchedPictures = await picturesCollection
-          .find(where.oneFrom('_id', ids).sortBy('createdAt', descending: true))
-          .map((picture) => Picture.fromJson(picture).toJson())
-          .toList();
-      albums[i]["pictures"] = fetchedPictures;
+      albums[i]["pictures"] = await _populate(albums[i]);
     }
+
     return albums;
+  }
+
+  /// Populate pictures in album
+  Future<List<Map>> _populate(Map albums) async {
+    final List<ObjectId> ids = List<String>.from(albums["pictures"])
+        .map((id) => ObjectId.parse(id))
+        .toList();
+
+    final List<Map> fetchedPictures = await picturesCollection
+        .find(where.oneFrom('_id', ids).sortBy('createdAt', descending: true))
+        .map((picture) => Picture.fromJson(picture).toJson())
+        .toList();
+
+    return fetchedPictures;
   }
 
   Future<void> addPicture(String owner, String album, String picture) async {

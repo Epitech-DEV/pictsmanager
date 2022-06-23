@@ -18,7 +18,7 @@ class _PhotosViewState extends State<PhotosView> with AutomaticKeepAliveClientMi
   @override
   void initState() {
     super.initState();
-    _pictureService = PictureService.getInstance();
+    _pictureService = PictureService.instance;
     _getUserPicturesFuture = _pictureService.getUserPictures();
   }
 
@@ -37,6 +37,7 @@ class _PhotosViewState extends State<PhotosView> with AutomaticKeepAliveClientMi
           } else if (snapshot.hasError) {
             return Center(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text('Network Error: fail to fetch pictures'),
                   const SizedBox(height: kSpace),

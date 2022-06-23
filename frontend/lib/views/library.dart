@@ -3,6 +3,7 @@ import 'package:frontend/components/album_list.dart';
 import 'package:frontend/models/album.dart';
 import 'package:frontend/services/albums.dart';
 import 'package:frontend/shared/globals.dart';
+import 'package:frontend/states/library_collection.dart';
 
 class LibraryView extends StatefulWidget {
   const LibraryView({Key? key}) : super(key: key);
@@ -12,13 +13,20 @@ class LibraryView extends StatefulWidget {
 }
 
 class _LibraryViewState extends State<LibraryView> with AutomaticKeepAliveClientMixin {
-  final AlbumService _albumService = AlbumService.getInstance();
-  late Future<List<AlbumData>> _getUserAlbumsFuture;
+  final AlbumService albumService = AlbumService.instance;
+  late LibraryCollectionController _libraryCollectionController;
 
   @override
   void initState() {
     super.initState();
-    _getUserAlbumsFuture = _albumService.getUserAlbums();
+    _libraryCollectionController = LibraryCollectionController.instance;
+    _libraryCollectionController.init(albumService, () => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _libraryCollectionController.dispose();
+    super.dispose();
   }
 
   @override
@@ -27,23 +35,20 @@ class _LibraryViewState extends State<LibraryView> with AutomaticKeepAliveClient
     
     return SafeArea(
       child: FutureBuilder<List<AlbumData>>(
-        future: _getUserAlbumsFuture,
+        future: _libraryCollectionController.loadFuture,
         builder: (BuildContext context, AsyncSnapshot<List<AlbumData>> snapshot) {
           if (snapshot.hasData) {
             return AlbumList(data: snapshot.data!);
           } else if (snapshot.hasError) {
             return Center(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text('Network Error: fail to fetch albums'),
                   const SizedBox(height: kSpace),
                   ElevatedButton(
                     child: const Text('Retry'),
-                    onPressed: () {
-                      setState(() {
-                        _getUserAlbumsFuture = _albumService.getUserAlbums();
-                      });
-                    },
+                    onPressed: () => _libraryCollectionController.reload(),
                   ),
                 ],
               ),

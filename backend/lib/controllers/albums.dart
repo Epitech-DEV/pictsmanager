@@ -5,6 +5,48 @@ import 'package:cobalt/backend.dart';
 
 @ControllerInfo()
 class AlbumsController with BackendControllerMixin {
+  @Get(path: '/shared')
+  Future<List<Map>> getShared(BackendRequest request) async {
+    JWTService jwtService = backend.getService<JWTService>()!;
+    String owner = jwtService.verify(request)["id"];
+
+    final List<Map> shared =
+        await backend.getService<AlbumsService>()!.getShared(owner);
+    return shared;
+  }
+
+  @Post(path: '/share')
+  Future<Map> addPermissions(BackendRequest request) async {
+    JWTService jwtService = backend.getService<JWTService>()!;
+    String owner = jwtService.verify(request)["id"];
+    List<String> albums = List<String>.from(
+      request.get(ParamsType.body, "albums"),
+    );
+    List<String> users = List<String>.from(
+      request.get(ParamsType.body, "users"),
+    );
+    await backend
+        .getService<AlbumsService>()!
+        .addPermissions(owner, albums, users);
+    return {};
+  }
+
+  @Post(path: '/unshare')
+  Future<Map> removePermissions(BackendRequest request) async {
+    JWTService jwtService = backend.getService<JWTService>()!;
+    String owner = jwtService.verify(request)["id"];
+    List<String> albums = List<String>.from(
+      request.get(ParamsType.body, "albums"),
+    );
+    List<String> users = List<String>.from(
+      request.get(ParamsType.body, "users"),
+    );
+    await backend
+        .getService<AlbumsService>()!
+        .removePermissions(owner, albums, users);
+    return {};
+  }
+
   @Post(path: '/')
   Future<Map> create(BackendRequest request) async {
     JWTService jwtService = backend.getService<JWTService>()!;

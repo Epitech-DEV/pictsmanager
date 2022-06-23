@@ -11,15 +11,57 @@ import 'package:cobalt/network/multipart_parser.dart';
 
 @ControllerInfo()
 class PicturesController with BackendControllerMixin {
+  @Get(path: '/shared')
+  Future<List<Map>> getShared(BackendRequest request) async {
+    JWTService jwtService = backend.getService<JWTService>()!;
+    String owner = jwtService.verify(request)["id"];
+
+    final List<Map> shared =
+        await backend.getService<PicturesService>()!.getShared(owner);
+    return shared;
+  }
+
+  @Post(path: '/share')
+  Future<Map> addPermissions(BackendRequest request) async {
+    JWTService jwtService = backend.getService<JWTService>()!;
+    String owner = jwtService.verify(request)["id"];
+    List<String> pictures = List<String>.from(
+      request.get(ParamsType.body, "pictures"),
+    );
+    List<String> users = List<String>.from(
+      request.get(ParamsType.body, "users"),
+    );
+    await backend
+        .getService<PicturesService>()!
+        .addPermissions(owner, pictures, users);
+    return {};
+  }
+
+  @Post(path: '/unshare')
+  Future<Map> removePermissions(BackendRequest request) async {
+    JWTService jwtService = backend.getService<JWTService>()!;
+    String owner = jwtService.verify(request)["id"];
+    List<String> pictures = List<String>.from(
+      request.get(ParamsType.body, "pictures"),
+    );
+    List<String> users = List<String>.from(
+      request.get(ParamsType.body, "users"),
+    );
+    await backend
+        .getService<PicturesService>()!
+        .removePermissions(owner, pictures, users);
+    return {};
+  }
+
   @Get(path: '/download/:path')
   HttpStream download(BackendRequest request) {
     String path = request.get<String>(ParamsType.params, 'path')!;
     String fileType = path.split('.')[1];
-    HttpStream stream = HttpStream(
+
+    return HttpStream(
       File('./pictures/$path').openRead(),
       contentType: 'image/$fileType',
     );
-    return stream;
   }
 
   @Get(path: '/')
@@ -32,7 +74,7 @@ class PicturesController with BackendControllerMixin {
     return picture;
   }
 
-  @Delete(path: '/')
+  @Post(path: '/')
   Future<Map> delete(BackendRequest request) async {
     JWTService jwtService = backend.getService<JWTService>()!;
     String owner = jwtService.verify(request)['id'];
@@ -42,6 +84,43 @@ class PicturesController with BackendControllerMixin {
         .getService<PicturesService>()!
         .deletePictures(owner, pictures);
     return {};
+  }
+
+  @Get(path: '/search')
+  Future<List<Map>> search(BackendRequest request) async {
+    JWTService jwtService = backend.getService<JWTService>()!;
+    String owner = jwtService.verify(request)["id"];
+
+    String? tags = request.get(ParamsType.query, "tags");
+    String? name = request.get(ParamsType.query, "name");
+    String? begin = request.get(ParamsType.query, "begin");
+    String? end = request.get(ParamsType.query, "end");
+
+    List<String>? tagsSplitted;
+    DateTime? beginDate;
+    DateTime? endDate;
+
+    if (tags != null) {
+      tagsSplitted = tags.split(",");
+    }
+
+    if (begin != null) {
+      beginDate = DateTime.parse(begin);
+    }
+
+    if (end != null) {
+      endDate = DateTime.parse(end);
+    }
+
+    List<Map> pictures = await backend.getService<PicturesService>()!.search(
+          owner,
+          name: name,
+          begin: beginDate,
+          end: endDate,
+          tags: tagsSplitted,
+        );
+
+    return pictures;
   }
 
   @Get(path: '/:id')

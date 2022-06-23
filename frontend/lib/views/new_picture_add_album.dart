@@ -28,7 +28,7 @@ class PictureAddToAlbum extends StatefulWidget {
 }
 
 class _PictureAddToAlbumState extends State<PictureAddToAlbum> {
-  final AlbumService _albumService = AlbumService.getInstance();
+  final AlbumService _albumService = AlbumService.instance;
   late Future<List<AlbumData>> _getUserAlbumsFuture;
   PictureApiRepository pictureApiRepository = PictureApiRepository();
   List<bool> checkboxSelectedAlbums = [];
@@ -81,13 +81,7 @@ class _PictureAddToAlbumState extends State<PictureAddToAlbum> {
                         padding: const EdgeInsets.all(kSpace * 2),
                         child: ElevatedButton(
                           child: const Text('Upload'),
-                          onPressed: () {
-                            Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                builder: (context) => const HomeView(),
-                              ),
-                              (Route<dynamic> route) => false,
-                            );
+                          onPressed: () async {
                             List<AlbumData> selectedAlbums = snapshot.data!;
                             List<AlbumData> albums = [];
                             checkboxSelectedAlbums
@@ -97,13 +91,19 @@ class _PictureAddToAlbumState extends State<PictureAddToAlbum> {
                                 albums.add(selectedAlbums[index]);
                               }
                             });
-                            pictureApiRepository.uploadPicture(
+                            await pictureApiRepository.uploadPicture(
                               File(widget.imagePath),
                               PictureMetadata(
                                 filename: widget.name,
                                 tags: widget.tagList,
                                 albums: albums,
                               ),
+                            );
+                            Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                builder: (context) => const HomeView(),
+                              ),
+                              (Route<dynamic> route) => false,
                             );
                           },
                         ),
