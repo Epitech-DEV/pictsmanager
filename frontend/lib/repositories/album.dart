@@ -60,12 +60,12 @@ class AlbumApiRepository extends AlbumRepository {
   
   @override
   Future<void> shareAlbum(String albumId, String username) async {
-    await api.post('albums/share');
+    await api.post('/albums/share', body: { 'albums': [albumId], 'users': [username] });
   }
   
   @override
   Future<void> unshareAlbum(String albumId, String username) async {
-    await api.post('albums/unshare');
+    await api.post('/albums/unshare', body: { 'albums': [albumId], 'users': [username] });
   }
 }
 
