@@ -7,6 +7,7 @@ import 'package:frontend/components/searchbar/searchbar.dart';
 import 'package:frontend/models/picture.dart';
 import 'package:frontend/models/search_query.dart';
 import 'package:frontend/services/pictures.dart';
+import 'package:frontend/shared/error.dart';
 import 'package:frontend/shared/globals.dart';
 
 class SearchView extends StatefulWidget {
@@ -16,8 +17,10 @@ class SearchView extends StatefulWidget {
   State<SearchView> createState() => _SearchViewState();
 }
 
-class _SearchViewState extends State<SearchView> with AutomaticKeepAliveClientMixin {
-  final StreamController<List<PictureData>?> _searchResultStreamController = StreamController<List<PictureData>?>();
+class _SearchViewState extends State<SearchView>
+    with AutomaticKeepAliveClientMixin {
+  final StreamController<List<PictureData>?> _searchResultStreamController =
+      StreamController<List<PictureData>?>();
   late final PictureService _pictureService;
   late SearchEditingController _searchEditingController;
 
@@ -28,7 +31,8 @@ class _SearchViewState extends State<SearchView> with AutomaticKeepAliveClientMi
     _searchEditingController = SearchEditingController();
   }
 
-  Future<void> onSearchIsPerformed(SearchEditingController? controller, bool advancedSearch) async {
+  Future<void> onSearchIsPerformed(
+      SearchEditingController? controller, bool advancedSearch) async {
     if (controller == null) {
       return;
     }
@@ -42,8 +46,17 @@ class _SearchViewState extends State<SearchView> with AutomaticKeepAliveClientMi
       end: controller.toDateController.date,
       useDateRange: controller.useDateRange.value,
     );
-     
-    final response = await _pictureService.search(query);
+
+    List<PictureData>? response;
+    try {
+      response = await _pictureService.search(query);
+    } catch (e) {
+      if (e is ApiError) {
+        print(e.code);
+        print(e.message);
+      }
+      return;
+    }
     _searchResultStreamController.add(response);
   }
 
@@ -61,23 +74,22 @@ class _SearchViewState extends State<SearchView> with AutomaticKeepAliveClientMi
           ),
         ),
         Expanded(
-          child: StreamBuilder<List<PictureData>?>(
-            stream: _searchResultStreamController.stream,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return PictureGroupList(
-                  data: snapshot.data!,
-                );
-              } else if (snapshot.hasError) {
-                return Center(child: Text(snapshot.error.toString()));
-              } else if(snapshot.connectionState == ConnectionState.active) {
-                return const Center(child: CircularProgressIndicator());
-              } else {
-                return const Center(child: Text("Waiting your search..."));
-              }
-            },
-          )
-        )
+            child: StreamBuilder<List<PictureData>?>(
+          stream: _searchResultStreamController.stream,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return PictureGroupList(
+                data: snapshot.data!,
+              );
+            } else if (snapshot.hasError) {
+              return Center(child: Text(snapshot.error.toString()));
+            } else if (snapshot.connectionState == ConnectionState.active) {
+              return const Center(child: CircularProgressIndicator());
+            } else {
+              return const Center(child: Text("Waiting your search..."));
+            }
+          },
+        ))
       ],
     );
   }

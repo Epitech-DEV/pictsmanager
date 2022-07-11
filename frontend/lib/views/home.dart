@@ -1,5 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/services/auth.dart';
 import 'package:frontend/views/library.dart';
 import 'package:frontend/views/new_album.dart';
 import 'package:frontend/views/photos.dart';
@@ -68,7 +69,16 @@ class _HomeViewState extends State<HomeView> {
   AppBar _buildAppBar(String title, {List<Widget>? actions}) {
     return AppBar(
       title: Text(title),
-      actions: actions,
+      actions: actions == null ? [logoutButton()] : [...actions, logoutButton()]
+    );
+  }
+
+  Widget logoutButton() {
+    return IconButton(
+      icon: const Icon(Icons.logout),
+      onPressed: () {
+        AuthService.instance.logout();
+      }
     );
   }
 

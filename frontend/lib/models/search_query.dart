@@ -1,5 +1,3 @@
-
-
 class SearchQuery {
   final bool useDateRange;
   final List<String>? tags;
@@ -21,14 +19,14 @@ class SearchQuery {
 
     if (!useDateRange && endDate != null) {
       beginDate = DateTime(endDate.year, endDate.month, endDate.day, 0, 0, 0);
-      endDate = DateTime(endDate.year, endDate.month, endDate.day, 23, 59, 59);
+      endDate = null;
     }
 
     return {
       'tags': tags?.join(','),
       'name': name,
-      'begin': beginDate?.toIso8601String(),
-      'end': endDate?.toIso8601String(),
+      'begin': beginDate?.toUtc().toString(),
+      'end': endDate?.toUtc().toString(),
     };
   }
 }

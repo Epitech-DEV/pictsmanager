@@ -30,6 +30,14 @@ class PictureService {
     return pictureRepository.search(query);
   }
 
+  Future<void> sharePicture(String pictureId, String username) {
+    return pictureRepository.sharePicture(pictureId, username);
+  }
+
+  Future<void> unsharePicture(String pictureId, String username) {
+    return pictureRepository.unsharePicture(pictureId, username);
+  }
+
   List<PicturesGroupData> generatePicturesGroups(PictureGroupType type, List<PictureData> picturesData) {
     switch (type) {
       case PictureGroupType.day:

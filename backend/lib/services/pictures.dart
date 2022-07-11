@@ -131,7 +131,7 @@ class PicturesService with BackendServiceMixin {
         options["createdAt"] = {"\$gte": begin, "\$lt": end};
       } else {
         // Strict date
-        options["createdAt"] = begin;
+        options["createdAt"] = {"\$gte": begin};
       }
     }
 

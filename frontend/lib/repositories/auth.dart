@@ -36,8 +36,8 @@ class AuthApiRepository extends AuthRepository {
       'password': password,
     });
 
-    final body = jsonDecode(response.body);
-    String jwt = body['result']['accessToken'];
+    final responseBody = jsonDecode(response.body);
+    String jwt = responseBody['result']['accessToken'];
     api.setJWT(jwt);
   }
 

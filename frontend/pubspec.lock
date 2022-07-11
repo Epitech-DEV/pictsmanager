@@ -39,24 +39,12 @@ packages:
   camera:
     dependency: "direct main"
     description:
-      name: camera
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.9.8+1"
-  camera_android:
-    dependency: transitive
-    description:
-      name: camera_android
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.9.8+3"
-  camera_avfoundation:
-    dependency: transitive
-    description:
-      name: camera_avfoundation
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.9.8+2"
+      path: "packages/camera/camera"
+      ref: issue_89578_dev
+      resolved-ref: "11cc4e1acca3025a507e84a574ab0246576efe95"
+      url: "https://github.com/camsim99/plugins.git"
+    source: git
+    version: "0.9.4+3"
   camera_platform_interface:
     dependency: transitive
     description:

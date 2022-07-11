@@ -10,6 +10,8 @@ abstract class AlbumRepository {
   Future<List<AlbumData>> getUserAlbums();
   Future<AlbumData> createAlbum(String name);
   Future<List<AlbumData>> getSharedAlbums();
+  Future<void> shareAlbum(String albumId, String username);
+  Future<void> unshareAlbum(String albumId, String username);
   Future<void> deleteAlbum(String id);
 }
 
@@ -54,6 +56,16 @@ class AlbumApiRepository extends AlbumRepository {
   @override
   Future<void> deleteAlbum(String id) async {
     await api.delete('/albums/$id');
+  }
+  
+  @override
+  Future<void> shareAlbum(String albumId, String username) async {
+    await api.post('albums/share');
+  }
+  
+  @override
+  Future<void> unshareAlbum(String albumId, String username) async {
+    await api.post('albums/unshare');
   }
 }
 
@@ -183,5 +195,17 @@ class AlbumInMemoryRepository extends AlbumRepository {
       const Duration(seconds: 2),
       () => null,
     );
+  }
+  
+  @override
+  Future<void> shareAlbum(String albumId, String username) {
+    // TODO: implement shareAlbum
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<void> unshareAlbum(String albumId, String username) {
+    // TODO: implement unshareAlbum
+    throw UnimplementedError();
   }  
 }

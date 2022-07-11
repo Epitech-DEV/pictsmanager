@@ -1,9 +1,11 @@
 import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:frontend/models/picture.dart';
 import 'package:frontend/utils/http_stream_downloader.dart';
 import 'package:frontend/views/picture.dart';
 import 'package:http/http.dart' as http;
+
 import '../repositories/api.dart';
 
 class Picture extends StatefulWidget {
@@ -36,10 +38,9 @@ class _PictureState extends State<Picture> {
     var httpClient = http.Client();
     var request = http.Request(
       'GET',
-      Uri.parse('http://10.101.9.1:8080/pictures/download/${widget.data.path}'),
+      Uri.parse('${ApiDatasource.baseUrl}/pictures/download/${widget.data.path}'),
     );
-    request.headers
-        .addAll({'Authorization': 'Bearer ${ApiDatasource.instance.jwt}'});
+    request.headers.addAll(ApiDatasource.instance.headers!);
     var response = httpClient.send(request);
 
     downloader = HttpStreamDownloader(response);

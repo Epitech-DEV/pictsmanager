@@ -100,7 +100,7 @@ class PicturesController with BackendControllerMixin {
     DateTime? beginDate;
     DateTime? endDate;
 
-    if (tags != null) {
+    if (tags != null && tags.isNotEmpty) {
       tagsSplitted = tags.split(",");
     }
 
@@ -114,7 +114,7 @@ class PicturesController with BackendControllerMixin {
 
     List<Map> pictures = await backend.getService<PicturesService>()!.search(
           owner,
-          name: name,
+          name: (name != null && name.isNotEmpty) ? name : null,
           begin: beginDate,
           end: endDate,
           tags: tagsSplitted,

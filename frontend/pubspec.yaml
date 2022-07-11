@@ -37,7 +37,11 @@ dependencies:
   cached_network_image: ^3.2.0
   flutter_secure_storage: ^5.0.2
   path: ^1.8.1
-  camera: ^0.9.6
+  camera:
+   git:
+     url: https://github.com/camsim99/plugins.git
+     path: packages/camera/camera
+     ref: issue_89578_dev
   cross_file: ^0.3.3
   http: ^0.13.4
   provider: ^6.0.3
